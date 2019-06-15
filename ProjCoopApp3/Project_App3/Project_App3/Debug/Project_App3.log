@@ -1,0 +1,12 @@
+﻿  Main.cpp
+d:\documents\gitrepos\waterpong\projcoopapp3\project_app3\main.cpp(444): warning C4305: 'argument' : troncation de 'double' à 'float'
+d:\documents\gitrepos\waterpong\projcoopapp3\project_app3\main.cpp(460): warning C4305: 'argument' : troncation de 'double' à 'float'
+d:\documents\gitrepos\waterpong\projcoopapp3\project_app3\main.cpp(468): warning C4305: 'argument' : troncation de 'double' à 'float'
+d:\documents\gitrepos\waterpong\projcoopapp3\project_app3\main.cpp(476): warning C4305: 'argument' : troncation de 'double' à 'float'
+d:\documents\gitrepos\waterpong\projcoopapp3\project_app3\main.cpp(505): warning C4305: 'argument' : troncation de 'double' à 'float'
+d:\documents\gitrepos\waterpong\projcoopapp3\project_app3\main.cpp(521): warning C4305: 'argument' : troncation de 'double' à 'float'
+d:\documents\gitrepos\waterpong\projcoopapp3\project_app3\main.cpp(529): warning C4305: 'argument' : troncation de 'double' à 'float'
+d:\documents\gitrepos\waterpong\projcoopapp3\project_app3\main.cpp(537): warning C4305: 'argument' : troncation de 'double' à 'float'
+  forms.cpp
+  Génération de code en cours...
+  Project_App3.vcxproj -> D:\Documents\GITrepos\WaterPong\ProjCoopApp3\Project_App3\Debug\Project_App3.exe

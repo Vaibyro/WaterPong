@@ -91,6 +91,7 @@ void Cube_face::render()
 
 Verre::Verre(Point org, double height, Color cl)
 {
+    cout << "constructor verre" << endl;
     // creation cube pour dessiner un verre
     height = height;
 
@@ -100,6 +101,8 @@ Verre::Verre(Point org, double height, Color cl)
     gluQuadricDrawStyle(params,GLU_LINE);
     //gluCylinder(GLUquadric* params, taille base, taille top,height,slices,stacks);
     gluCylinder(params, 1, 1, 2, 20, 1);
+
+    cout << "verre cree" << endl;
 }
 
 void Verre::update(double delta_t)
@@ -114,7 +117,6 @@ void Verre::render()
     quad = gluNewQuadric();
 
     // Complete this part
-
 
     gluDeleteQuadric(quad);
 }
