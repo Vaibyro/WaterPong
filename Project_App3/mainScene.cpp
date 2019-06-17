@@ -16,8 +16,7 @@ void MainScene::setup()
 
 	auto axis = createComponent(shared_ptr<Form>(new Axis()), Vector3(0, 0, 0));
 
-	// Table
-	table = createComponent(shared_ptr<Form>(new Table(2, 30, 15)), Vector3(-30, -2, -7.5));
+	
 	//Table(double hei, double len, double wi);
 
 	radius = 0.5;
@@ -40,6 +39,11 @@ void MainScene::setup()
 
 	d = 5.0;
 
+	// Décor
+
+	/*
+	// Table
+	table = createComponent(shared_ptr<Form>(new Table(2, 30, 15)), Vector3(-30, -2, -7.5));
 	// Verres
 	double heightGlass = 3;
 	double rayBottomGlass = 1;
@@ -63,7 +67,7 @@ void MainScene::setup()
 	// personnages
 	personnage1 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-40, -10, 5));
 	personnage2 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-40, -10, -15));
-
+	*/
 
 	//auto spherex = createComponent(shared_ptr<Form>(new Sphere(0.5, BLUE)), Vector3(-1, 0, 0));
 	cout << "Scene setup finished !" << endl;
@@ -163,7 +167,7 @@ void MainScene::update(double delta_t)
 		ray->setForm(shared_ptr<Form>(new Arrow((mouseArrival - mouseDeparture).normalize())));
 		rayThrow->setForm(shared_ptr<Form>(new Ray(mouseArrival, mouseDeparture)));
 
-		Vector3 throwingSpeed = spd * (mouseArrival - mouseDeparture).normalize();
+		Vector3 throwingSpeed = distance * 5.0 * (mouseArrival - mouseDeparture).normalize();
 		balleTest->getAnimation()->setSpeed(throwingSpeed);
 	}
 
