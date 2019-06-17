@@ -44,6 +44,19 @@ public:
 	// Get or set the position of the object
 	void setPosition(const Vector3& pt) { pos = pt; }
 	void setPosition(double x, double y, double z) { pos.x = x; pos.y = y; pos.z = z; };
+
+	void setX(double val) { pos.x = val; };
+	void setY(double val) { pos.y = val; };
+	void setZ(double val) { pos.z = val; };
+
+	double getX() { return pos.x; };
+	double getY() { return pos.y; };
+	double getZ() { return pos.z; };
+
+	void setSpeedX(double val) { spd.x = val; };
+	void setSpeedY(double val) { spd.y = val; };
+	void setSpeedZ(double val) { spd.z = val; };
+
 	const Vector3& getPosition() { return pos; }
 
 	// Get or set the scale

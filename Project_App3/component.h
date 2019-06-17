@@ -34,6 +34,19 @@ public:
 	void setAnimation(shared_ptr<Animation> anim) { animation = anim; };
 	shared_ptr<Animation> getAnimation() { return animation; };
 
+	// Shortcuts
+	double getX() { return animation->getX(); };
+	double getY() { return animation->getY(); };
+	double getZ() { return animation->getZ(); };
+
+	void setX(double val) { animation->setX(val); };
+	void setY(double val) { animation->setY(val); };
+	void setZ(double val) { animation->setZ(val); };
+
+	void setSpeedX(double val) { animation->setSpeedX(val); };
+	void setSpeedY(double val) { animation->setSpeedY(val); };
+	void setSpeedZ(double val) { animation->setSpeedZ(val); };
+
 	vector<shared_ptr<Collider>>& getColliders() { return colliders; };
 	void addCollider(const shared_ptr<Collider>& collider) { colliders.push_back(collider); };
 

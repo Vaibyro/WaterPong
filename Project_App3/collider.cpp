@@ -41,8 +41,8 @@ bool SphereCollider::collision(const shared_ptr<PlaneCollider>& collider)
 	//fdis = (posOrgSphere - posOrgPlane) * normal;
 
 
-	cout << normal << " * (" << posOrgSphere << " - " << posOrgPlane << ") = " << fdis << " !!! " << radius << endl;
-	return fdis <= radius;
+	//cout << normal << " * (" << posOrgSphere << " - " << posOrgPlane << ") = " << fdis << " !!! " << radius << endl;
+	return fdis - radius <= 10e-6;
 }
 
 Vector3 PlaneCollider::getNormal()
@@ -55,4 +55,9 @@ Vector3 PlaneCollider::getNormal()
 	Vector3 dir = (p2 - p1) ^ (p3 - p1);
 	double n = dir.norm();
 	return Vector3(dir.x / n, dir.y / n, dir.z / n);
+}
+
+Vector3 Collider::closestPoint(const Vector3& a, const Vector3& b, const Vector3& point)
+{
+	return (a - b) ^ (a - point);
 }

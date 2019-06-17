@@ -160,8 +160,6 @@ const void render(shared_ptr<Scene> scene, const Point& cam_pos)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	
-
 	// Set the camera position and parameters
 	gluLookAt(cam_pos.x, cam_pos.y, cam_pos.z, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
@@ -173,7 +171,6 @@ const void render(shared_ptr<Scene> scene, const Point& cam_pos)
 	Matrix4 projectionMatrix = Matrix4(pm);
 	scene->camera.viewMatrix = viewMatrix;
 	scene->camera.projectionMatrix = projectionMatrix;
-
 
 
 	// Isometric view
@@ -228,7 +225,7 @@ int main(int argc, char* args[])
 		SDL_Event event;
 
 		// Camera position
-		Point camera_position(5.0, 5.0, 5.0);
+		Point camera_position(0.0, 0.0, 5.0);
 
 		// Initialize the scene
 		shared_ptr<Scene> scene = make_shared<MainScene>();

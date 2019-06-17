@@ -27,6 +27,8 @@ public:
 	virtual bool collision(double x, double y, double z) = 0;
 	virtual bool collision(const shared_ptr<SphereCollider>& collider) = 0;
 	virtual bool collision(const shared_ptr<PlaneCollider>& collider) = 0;
+
+	static Vector3 closestPoint(const Vector3& a, const Vector3& b, const Vector3& point);
 };
 
 class SphereCollider : public Collider

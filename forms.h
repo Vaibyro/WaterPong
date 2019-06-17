@@ -77,7 +77,12 @@ public:
 
 class Axis : public Form
 {
+private:
+	shared_ptr<Form> arrowX;
+	shared_ptr<Form> arrowY;
+	shared_ptr<Form> arrowZ;
 public:
+	Axis();
 	void update(double delta_t);
 	void render();
 };
@@ -98,15 +103,28 @@ public:
 
 
 
-class Ray : public Form
+class Arrow : public Form
 {
 private:
 	Vector3 dirFromOrigin;
 public:
-	Ray(const Vector3& dir) { dirFromOrigin = dir; };
-	Ray(const Vector3& dir, const Color& cl) { dirFromOrigin = dir; col = cl; };
+	Arrow(const Vector3& dir) { dirFromOrigin = dir; };
+	Arrow(const Vector3& dir, const Color& cl) { dirFromOrigin = dir; col = cl; };
 	void update(double delta_t);
 	void render();
 };
+
+class Ray : public Form
+{
+private:
+	Vector3 pos1;
+	Vector3 pos2;
+public:
+	Ray(const Vector3& p1, const Vector3& p2) { pos1 = p1; pos2 = p2; };
+	Ray(const Vector3& p1, const Vector3& p2, const Color& cl) { pos1 = p1; pos2 = p2; col = cl; };
+	void update(double delta_t);
+	void render();
+};
+
 
 #endif // FORMS_H_INCLUDED

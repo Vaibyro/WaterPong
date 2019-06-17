@@ -50,6 +50,7 @@ public:
 	const vector<shared_ptr<Component>>& getComponents() { return components; };
 
 	shared_ptr<Component> createComponent(const shared_ptr<Form>& form, const Vector3& pos);
+	shared_ptr<Component> createComponent(const shared_ptr<Form>& form);
 
 	size_t componentsCount() { return components.size(); };
 

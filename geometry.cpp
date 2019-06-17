@@ -151,6 +151,7 @@ Vector3 operator^(const Vector3 &v1, const Vector3 &v2)
 }
 
 
+
 void Geometry::plane(const Vector3& p1, const Vector3& p2, const Vector3& p3)
 {
 
@@ -163,3 +164,4 @@ void Geometry::plane(const Vector3& p1, const Vector3& p2, const Vector3& p3)
 	cout << "equation of plane is " << a << " x + " << b
 		<< " y + " << c << " z + " << d << " = 0.";
 }
+

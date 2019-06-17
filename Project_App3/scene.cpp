@@ -26,3 +26,8 @@ shared_ptr<Component> Scene::createComponent(const shared_ptr<Form>& form, const
 	components.push_back(component);
 	return component;
 }
+
+shared_ptr<Component> Scene::createComponent(const shared_ptr<Form>& form)
+{
+	return createComponent(form, Vector3(0, 0, 0));
+}

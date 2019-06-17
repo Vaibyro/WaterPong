@@ -98,26 +98,29 @@ void Axis::update(double delta_t)
 	// Do nothing, no physics associated to a Cube_face
 }
 
+Axis::Axis()
+{
+	arrowY = make_shared<Arrow>(Vector3(0, 1, 0), GREEN);
+	arrowX = make_shared<Arrow>(Vector3(1, 0, 0), RED);
+	arrowZ = make_shared<Arrow>(Vector3(0, 0, 1), BLUE);
+}
 
 void Axis::render()
 {
-	auto ry = Ray(Vector3(0, 1, 0), GREEN);
-	ry.setAnim(anim);
-	ry.render();
+	arrowY->setAnim(anim);
+	arrowY->render();
 	
 	glPopMatrix();
 	glPushMatrix();
 
-	auto rx = Ray(Vector3(1, 0, 0), RED);
-	rx.setAnim(anim);
-	rx.render();
+	arrowX->setAnim(anim);
+	arrowX->render();
 
 	glPopMatrix();
 	glPushMatrix();
 
-	auto rz = Ray(Vector3(0, 0, 1), BLUE);
-	rz.setAnim(anim);
-	rz.render();
+	arrowZ->setAnim(anim);
+	arrowZ->render();
 }
 
 
@@ -166,15 +169,15 @@ Vector3& Plane::getNormal()
 
 
 
-void Ray::update(double delta_t)
+void Arrow::update(double delta_t)
 {
 	// Do nothing, no physics associated to a Cube_face
 }
 
-void Ray::render()
+void Arrow::render()
 {
 	Form::render();
-	Vector3 to = dirFromOrigin.normalize();
+	Vector3 to = dirFromOrigin;
 	Vector3 org = anim->getPosition();
 
 
@@ -206,4 +209,24 @@ void Ray::render()
 	gluDeleteQuadric(quad);
 
 	//glTranslated(org.x - to.x, org.y - to.y, org.z - to.z);
+}
+
+
+void Ray::update(double delta_t)
+{
+	
+}
+
+void Ray::render()
+{
+
+	Form::render();
+
+	// Draw the line
+	glBegin(GL_LINES);
+	{
+		glVertex3d(pos1.x, pos1.y, pos1.z);
+		glVertex3d(pos2.x, pos2.y, pos2.z);
+	}
+	glEnd();
 }
