@@ -571,7 +571,7 @@ int main(int argc, char* args[])
 		SDL_Event event;
 		
 		// Camera position
-		Point camera_position(0, 0.0, 3.0);
+		Point camera_position(0, 0.0, 15.0);
 
 		
 		// Create here specific forms and add them to the list...
