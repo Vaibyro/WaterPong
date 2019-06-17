@@ -42,7 +42,7 @@ bool SphereCollider::collision(const shared_ptr<PlaneCollider>& collider)
 
 
 	cout << normal << " * (" << posOrgSphere << " - " << posOrgPlane << ") = " << fdis << " !!! " << radius << endl;
-	return fdis <= radius;
+	return fdis - radius <= 10e-6;
 }
 
 Vector3 PlaneCollider::getNormal()

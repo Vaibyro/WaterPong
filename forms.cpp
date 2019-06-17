@@ -207,3 +207,471 @@ void Ray::render()
 
 	//glTranslated(org.x - to.x, org.y - to.y, org.z - to.z);
 }
+
+
+///////////////////////////////////
+///////////		GLASS	///////////
+///////////////////////////////////
+Verre::Verre(double hei, double rayB, double rayT, Color coGob, Color coLiq)
+{
+	height = hei;
+	rayBottom = rayB;
+	rayTop = rayT;
+	col = RED;
+	colorGobelet = coGob;
+	colorLiquide = coLiq;
+}
+
+
+void Verre::update(double delta_t)
+{
+	// Complete this part
+}
+
+
+void Verre::render()
+{
+
+	cout << "possition verre :" << endl;
+	cout << "x = " << anim->getPosition().x << endl;
+	cout << "y = " << anim->getPosition().y << endl;
+	cout << "z = " << anim->getPosition().z << endl;
+	
+	glPopMatrix();
+	glPushMatrix();
+
+	// liquide
+	Liquide liquide = Liquide(height - 0.2, rayBottom - 0.05, rayTop - 0.05, colorLiquide);
+	// Liquide(double hei, double rayB, double rayT, Color co)
+	auto animLiquide = make_shared<Animation>(anim->getPosition().x * 0.15,
+		anim->getPosition().y * 0.15,
+		anim->getPosition().z * 0.15);
+	liquide.setAnim(animLiquide);
+	liquide.render();
+
+	glPopMatrix();
+	glPushMatrix();
+
+	// gobelet
+	Gobelet gobelet = Gobelet(height, rayBottom, rayTop, colorGobelet);
+	// Gobelet(double hei, double rayB, double rayT, Color co)
+	auto animGobelet = make_shared<Animation>(anim->getPosition().x * 0.15,
+		anim->getPosition().y * 0.15,
+		anim->getPosition().z * 0.15);
+	gobelet.setAnim(animGobelet);
+	gobelet.render();
+
+	glPopMatrix();
+	glPushMatrix();
+}
+
+
+///////////////////////////////////
+///////////		LIQUIDE	///////////
+///////////////////////////////////
+Liquide::Liquide(double hei, double rayB, double rayT, Color co)
+{
+	height = hei;
+	rayBottom = rayB;
+	rayTop = rayT;
+	col = co;
+}
+
+
+void Liquide::update(double delta_t)
+{
+	// Complete this part
+}
+
+
+void Liquide::render()
+{
+	// create cilynder
+	GLUquadric* params;
+	params = gluNewQuadric();
+
+	// set possition 
+	glTranslated(anim->getPosition().x, anim->getPosition().y, anim->getPosition().z);
+	glRotated(90, -1, 0, 0);
+	glScaled(0.15, 0.15, 0.15);
+	glColor3f(col.r, col.g, col.b);
+
+	gluQuadricDrawStyle(params, GLU_FILL);
+	//gluQuadricTexture(params, GL_TRUE);
+
+	gluCylinder(params, rayBottom, rayTop, height, 20, 1);
+	//gluCylinder(GLUquadric* params,base,top,height,slices,stacks);
+	gluDeleteQuadric(params);
+	
+}
+
+
+
+///////////////////////////////////
+///////////		GOBELET	///////////
+///////////////////////////////////
+Gobelet::Gobelet(double hei, double rayB, double rayT, Color co)
+{
+	height = hei;
+	rayBottom = rayB;
+	rayTop = rayT;
+	col = co;
+}
+
+
+void Gobelet::update(double delta_t)
+{
+	// Complete this part
+}
+
+
+void Gobelet::render()
+{
+	// create cilynder
+	GLUquadric* params;
+	params = gluNewQuadric();
+
+	// set possition 
+	glTranslated(anim->getPosition().x, anim->getPosition().y, anim->getPosition().z);
+	glRotated(90, -1, 0, 0);
+	glScaled(0.15, 0.15, 0.15);
+	glColor3f(col.r, col.g, col.b);
+
+	gluQuadricDrawStyle(params, GLU_LINE);
+
+	gluCylinder(params, this->rayBottom, this->rayTop, this->height, 20, 1);
+	//gluCylinder(GLUquadric* params,base,top,height,slices,stacks);
+	gluDeleteQuadric(params);
+}
+
+
+
+///////////////////////////////
+/////////	TABLE	///////////
+///////////////////////////////
+Table::Table(double hei, double len, double wi)
+{
+	height = hei;
+	lenght = len;
+	width = wi;
+}
+
+void Table::update(double delta_t)
+{
+	// Complete this part
+}
+
+void Table::render()
+{
+	glPopMatrix();
+	glPushMatrix();
+
+	// pied 1
+	Parallelepipede pied1 = Parallelepipede(3, 3, 8, RED);
+	//Parallelepipede(double len, double wid, double hei, Color co);
+	auto animPied1 = make_shared<Animation>(anim->getPosition().x,
+		anim->getPosition().y - 8,
+		anim->getPosition().z);
+	pied1.setAnim(animPied1);
+	pied1.render();
+
+	glPopMatrix();
+	glPushMatrix();
+
+	// pied 2
+	Parallelepipede pied2 = Parallelepipede(3, 3, 8, RED);
+	auto animPied2 = make_shared<Animation>(anim->getPosition().x,
+		anim->getPosition().y - 8,
+		anim->getPosition().z + width - 3);
+	pied2.setAnim(animPied2);
+	pied2.render();
+
+	glPopMatrix();
+	glPushMatrix();
+
+	// pied 3
+	Parallelepipede pied3 = Parallelepipede(3, 3, 8, RED);
+	auto animPied3 = make_shared<Animation>(anim->getPosition().x + lenght - 3,
+		anim->getPosition().y - 8,
+		anim->getPosition().z);
+	pied3.setAnim(animPied3);
+	pied3.render();
+
+	glPopMatrix();
+	glPushMatrix();
+	
+	// pied 4
+	Parallelepipede pied4 = Parallelepipede(3, 3, 8, RED);
+	auto animPied4 = make_shared<Animation>(anim->getPosition().x + lenght - 3,
+		anim->getPosition().y - 8,
+		anim->getPosition().z + width -3);
+	pied4.setAnim(animPied4);
+	pied4.render();
+
+	glPopMatrix();
+	glPushMatrix();
+	
+	// plateau
+	// pied 1
+	Parallelepipede plateau = Parallelepipede(lenght, width, height, GREEN);
+	plateau.setAnim(anim);
+	plateau.render();
+
+	glPopMatrix();
+	glPushMatrix();
+
+}
+
+
+///////////////////////////////
+/////////	PERSONNAGE	///////////
+///////////////////////////////
+Personnage::Personnage()
+{
+
+}
+
+void Personnage::update(double delta_t)
+{
+	// Complete this part
+}
+
+void Personnage::render()
+{
+	glPopMatrix();
+	glPushMatrix();
+
+	double rayonTete = 2;
+	double largeurBras = 2;
+	double hauteurBras = 10;
+	double largeurJambe = 3;
+	double hauteurJambe = 9;
+	double largeurTronc = 8;
+	double hauteurTronc = 10;
+	double hauteurBassin = 3;
+	double epaisseur = 3;
+
+	Color couleurJambe = BLUE;
+	Color couleurBassin = BROWN;
+	Color couleurTronc = WHITE;
+	Color couleurPeau = SKIN;
+
+	// jambe gauche
+	// Parallelepipede(double len, double wid, double hei, Color co)
+	Parallelepipede jambeGauche = Parallelepipede(largeurJambe, epaisseur, hauteurJambe, couleurJambe);
+	auto animJambeGauche = make_shared<Animation>(anim->getPosition().x,
+		anim->getPosition().y,
+		anim->getPosition().z);
+	jambeGauche.setAnim(animJambeGauche);
+	jambeGauche.render();
+
+	glPopMatrix();
+	glPushMatrix();
+
+	// jambe droite
+	Parallelepipede jambeDroite = Parallelepipede(largeurJambe, epaisseur, hauteurJambe, couleurJambe);
+	auto animJambeDroite = make_shared<Animation>(anim->getPosition().x,
+		anim->getPosition().y,
+		anim->getPosition().z + largeurTronc - largeurJambe);
+	jambeDroite.setAnim(animJambeDroite);
+	jambeDroite.render();
+
+	glPopMatrix();
+	glPushMatrix();
+	
+	// bassin
+	Parallelepipede bassin = Parallelepipede(epaisseur, largeurTronc, hauteurBassin, couleurBassin);
+	auto animBassin = make_shared<Animation>(anim->getPosition().x,
+		anim->getPosition().y + hauteurJambe,
+		anim->getPosition().z);
+	bassin.setAnim(animBassin);
+	bassin.render();
+
+	glPopMatrix();
+	glPushMatrix();
+
+	// tronc
+	Parallelepipede tronc = Parallelepipede(epaisseur, largeurTronc, hauteurTronc, couleurTronc);
+	auto animTronc = make_shared<Animation>(anim->getPosition().x,
+		anim->getPosition().y + hauteurJambe + hauteurBassin,
+		anim->getPosition().z);
+	tronc.setAnim(animTronc);
+	tronc.render();
+
+	glPopMatrix();
+	glPushMatrix();
+
+	// bras gauche
+	Parallelepipede brasGauche = Parallelepipede(epaisseur, largeurBras, hauteurBras, couleurPeau);
+	auto animBrasGauche = make_shared<Animation>(anim->getPosition().x,
+		anim->getPosition().y + hauteurJambe + hauteurBassin,
+		anim->getPosition().z - largeurBras);
+	brasGauche.setAnim(animBrasGauche);
+	brasGauche.render();
+
+	glPopMatrix();
+	glPushMatrix();
+
+	// bras droit
+	Parallelepipede brasDroit = Parallelepipede(epaisseur, largeurBras, hauteurBras, couleurPeau);
+	auto animBrasDroit = make_shared<Animation>(anim->getPosition().x,
+		anim->getPosition().y + hauteurJambe + hauteurBassin,
+		anim->getPosition().z + largeurTronc);
+	brasDroit.setAnim(animBrasDroit);
+	brasDroit.render();
+
+	glPopMatrix();
+	glPushMatrix();
+
+	// tete
+	// Sphere(double r, Color cl)
+	Sphere tete = Sphere(rayonTete * 0.15, couleurPeau);
+	auto animTete = make_shared<Animation>((anim->getPosition().x + rayonTete) * 0.15,
+		(anim->getPosition().y + hauteurJambe + hauteurBassin + hauteurTronc + rayonTete) * 0.15,
+		(anim->getPosition().z + (largeurTronc/2)) * 0.15);
+	tete.setAnim(animTete);
+	tete.render();
+
+	glPopMatrix();
+	glPushMatrix();
+
+}
+
+
+
+///////////////////////////////////////////
+///////////		PARALLELEPIPEDE	///////////
+///////////////////////////////////////////
+Parallelepipede::Parallelepipede(double len, double wid, double hei, Color co)
+{
+	length = len;
+	width = wid;
+	height = hei;
+	col = co;
+}
+
+void Parallelepipede::update(double delta_t)
+{
+	// Do nothing, no physics associated toa table
+	glColor3f(col.r, col.g, col.b);
+}
+
+
+void Parallelepipede::render()
+{
+	glScaled(0.15, 0.15, 0.15);
+
+	glEnable(GL_DEPTH_TEST);
+
+	Vector3 p = anim->getPosition();
+
+
+	glBegin(GL_QUADS);
+
+	glColor3f(col.r, col.g, col.b); //face fond droit
+	glVertex3d(p.x, p.y, p.z);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x + length, p.y, p.z);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x + length, p.y + height, p.z);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x, p.y + height, p.z);
+
+	glColor3f(col.r, col.g, col.b); //face  fond gauche
+	glVertex3d(p.x, p.y, p.z);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x, p.y, p.z + width);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x, p.y + height, p.z + width);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x, p.y + height, p.z);
+
+	glColor3f(col.r, col.g, col.b); //face du bas
+	glVertex3d(p.x, p.y, p.z);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x, p.y, p.z + width);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x + length, p.y, p.z + width);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x + length, p.y, p.z);
+
+
+	glColor3f(col.r, col.g, col.b); //face avant droit
+	glVertex3d(p.x + length, p.y, p.z);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x + length, p.y + height, p.z);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x + length, p.y + height, p.z + width);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x + length, p.y, p.z + width);
+
+	glColor3f(col.r, col.g, col.b); //face avant gauche
+	glVertex3d(p.x, p.y, p.z + width);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x, p.y + height, p.z + width);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x + length, p.y + height, p.z + width);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x + length, p.y, p.z + width);
+
+	glColor3f(col.r, col.g, col.b); //face du haut
+	glVertex3d(p.x, p.y + height, p.z);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x, p.y + height, p.z + width);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x + length, p.y + height, p.z + width);
+	glColor3f(col.r, col.g, col.b);
+	glVertex3d(p.x + length, p.y + height, p.z);
+
+	glEnd();
+
+
+	// contours
+	// face haut
+
+	glLineWidth(0.5);
+	glColor3f(0.0, 0.0, 0.0);
+
+	glBegin(GL_LINES);
+
+	glVertex3d(p.x, p.y + height, p.z);
+	glVertex3d(p.x, p.y + height, p.z + width);
+
+	glVertex3d(p.x, p.y + height, p.z + width);
+	glVertex3d(p.x + length, p.y + height, p.z + width);
+
+
+	glVertex3d(p.x + length, p.y + height, p.z + width);
+	glVertex3d(p.x + length, p.y + height, p.z);
+
+	glVertex3d(p.x + length, p.y + height, p.z);
+	glVertex3d(p.x, p.y + height, p.z);
+
+	glVertex3d(p.x, p.y, p.z);
+	glVertex3d(p.x, p.y + height, p.z);
+
+	glVertex3d(p.x, p.y, p.z + width);
+	glVertex3d(p.x, p.y + height, p.z + width);
+
+	glVertex3d(p.x + length, p.y, p.z + width);
+	glVertex3d(p.x + length, p.y + height, p.z + width);
+
+	glVertex3d(p.x + length, p.y, p.z);
+	glVertex3d(p.x + length, p.y + height, p.z);
+
+	glVertex3d(p.x, p.y, p.z);
+	glVertex3d(p.x, p.y, p.z + width);
+
+	glVertex3d(p.x, p.y, p.z + width);
+	glVertex3d(p.x + length, p.y, p.z + width);
+
+	glVertex3d(p.x + length, p.y, p.z + width);
+	glVertex3d(p.x + length, p.y, p.z);
+
+	glVertex3d(p.x + length, p.y, p.z);
+	glVertex3d(p.x, p.y, p.z);
+
+
+	glEnd();
+
+}
