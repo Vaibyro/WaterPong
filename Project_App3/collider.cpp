@@ -29,7 +29,7 @@ bool SphereCollider::collision(const shared_ptr<PlaneCollider>& collider)
 {
 	Vector3 posOrgPlane = collider->getAnimation()->getPosition();
 	Vector3 posOrgSphere = linkedAnimation->getPosition();
-	
+
 	// Distance between center of plane and center of sphere
 	double d = posOrgPlane.distance(posOrgSphere);
 

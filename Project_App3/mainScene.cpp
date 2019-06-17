@@ -16,6 +16,10 @@ void MainScene::setup()
 
 	auto axis = createComponent(shared_ptr<Form>(new Axis()), Vector3(0, 0, 0));
 
+	// Table
+	table = createComponent(shared_ptr<Form>(new Table(2, 30, 15)), Vector3(-30, -2, -7.5));
+	//Table(double hei, double len, double wi);
+
 	radius = 0.5;
 	balleSouris = createComponent(shared_ptr<Form>(new Sphere(radius, RED)), Vector3(1, 10, 0));
 	balleSouris->addSphereCollider(radius, Vector3(0, 0, 0));
@@ -35,7 +39,35 @@ void MainScene::setup()
 	balleTest->getAnimation()->setSpeed(-2, 0, -1);
 
 	d = 5.0;
+
+	// Verres
+	double heightGlass = 3;
+	double rayBottomGlass = 1;
+	double rayTopGlass = 1.5;
+	double decalageTable = 3;
+	// Verre(double hei, double rayB, double rayT, Color coGob, Color coLiq)
+	verre1 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-30+decalageTable, 0, -7.5+ decalageTable));
+	verre2 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-30 + decalageTable, 0, -4.5 + decalageTable));
+	verre3 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-30 + decalageTable, 0, -1.5 + decalageTable));
+	verre4 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-30 + decalageTable, 0, 1.5 + decalageTable));
+
+	verre5 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-27.5 + decalageTable, 0, -6 + decalageTable));
+	verre6 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-27.5 + decalageTable, 0, -3 + decalageTable));
+	verre7 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-27.5 + decalageTable, 0, 0 + decalageTable));
+
+	verre8 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-25 + decalageTable, 0, -4.5 + decalageTable));
+	verre9 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-25 + decalageTable, 0, -1.5 + decalageTable));
+
+	verre10 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-22.5 + decalageTable, 0, -3 + decalageTable));
+
+	// personnages
+	personnage1 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-40, -10, 5));
+	personnage2 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-40, -10, -15));
+
+
+	//auto spherex = createComponent(shared_ptr<Form>(new Sphere(0.5, BLUE)), Vector3(-1, 0, 0));
 	cout << "Scene setup finished !" << endl;
+
 
 	lastCollision = false;
 
@@ -48,50 +80,6 @@ void MainScene::setup()
  */
 void MainScene::update(double delta_t)
 {
-	/*
-	//toto->getAnimation()->translate(delta_t * Vector(0, -1, 0));
-	//toto->getAnimation()->setScale(0.992 * toto->getAnimation()->getScale());
-
-	double grav = 9.81;//9.81;
-	double alpha = 90.0;
-
-	Vector3 pt;
-	//pt.x = toto->getAnimation()->getPosition().x; //(V0x * cos(alpha) * delta_t + x0);
-	//pt.y = (-(grav * (delta_t * delta_t)) / 2.0 - 0.1 * sin(alpha) + toto->getAnimation()->getPosition().y);
-	//pt.z = toto->getAnimation()->getPosition().z;//(V0z * cos(alpha) * delta_t + z0);
-
-	double newspeed = toto->getAnimation()->getSpeed().y + (-grav * delta_t * delta_t) / 2.0;
-	toto->getAnimation()->setSpeed(0, newspeed, 0);
-
-	// Colliders
-	for (auto& collider : toto->getColliders())
-	{
-		bool iscoll = collider->collision(coll);
-		if (iscoll) {
-			toto->getAnimation()->setSpeed(0, 0, 0);
-			toto->getAnimation()->setPosition(toto->getAnimation()->getPosition().x, 0.5 - 1, toto->getAnimation()->getPosition().z);
-		}
-	}
-
-
-	float x, y, z;
-	x = toto->getAnimation()->getPosition().x;
-	y = toto->getAnimation()->getPosition().y + toto->getAnimation()->getSpeed().y;
-	z = toto->getAnimation()->getPosition().z;
-
-
-	if (mouse.leftButtonPressed) {
-		x = (2.0f * mouse.posX) / screen.width * 2.0 - 2.0f;
-		y = 1.5f - (2.0f * mouse.posY) / screen.width * 1.5;
-		z = 0.0f;
-		toto->getAnimation()->setSpeed(0, 0, 0);
-	}
-
-
-	toto->getAnimation()->setPosition(x, y, z);
-
-	*/
-
 	// Detect collision ball / plane
 	bool collision = false;
 	for (auto& collider : balleTest->getColliders())
@@ -130,7 +118,7 @@ void MainScene::update(double delta_t)
 	double x, y, z;
 
 	if (mouse.leftButtonPressed) {
-		
+
 		x = (2.0f * mouse.posX) / screen.width * 2.0 - 2.0f;
 		y = 1.5f - (2.0f * mouse.posY) / screen.width * 1.5;
 		z = 0.0f;
@@ -153,7 +141,7 @@ void MainScene::update(double delta_t)
 
 	balleTest->getAnimation()->setPosition(x, y, z);
 
-	if (mouse.leftButtonReleased) 
+	if (mouse.leftButtonReleased)
 	{
 		mousePressedLastState = false;
 		current_time = SDL_GetTicks();
@@ -166,7 +154,7 @@ void MainScene::update(double delta_t)
 
 
 		// Throw ball by mouse
-		
+
 
 		mouseArrival = balleTest->getAnimation()->getPosition();
 
@@ -225,7 +213,6 @@ void MainScene::update(double delta_t)
 	*/
 }
 
-
 /*
  * Une fois toutes les t millisecondes. Ne depend pas de la vitesse du PC.
  */
@@ -233,4 +220,3 @@ void MainScene::fixedUpdate()
 {
 
 }
-

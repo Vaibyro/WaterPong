@@ -19,6 +19,8 @@ const Color BLUE(0.0f, 0.0f, 1.0f);
 const Color GREEN(0.0f, 1.0f, 0.0f);
 const Color YELLOW(1.0f, 1.0f, 0.0f);
 const Color WHITE(1.0f, 1.0f, 1.0f);
+const Color BROWN(0.3, 0, 0);
+const Color SKIN(0.9, 0.8, 0);
 
 
 // Generic class to render and animate an object
@@ -114,6 +116,7 @@ public:
 	void render();
 };
 
+
 class Ray : public Form
 {
 private:
@@ -127,4 +130,98 @@ public:
 };
 
 
+class Verre : public Form
+{
+private:
+	// The sphere center is aligned with the coordinate system origin
+	// => no center required here, information is stored in the anim object
+	double height;
+	double rayBottom;
+	double rayTop;
+	Color colorGobelet;
+	Color colorLiquide;
+public:
+	Verre(double height = 1.0, double rayBottom = 0.5, double rayTop = 1, Color coGob = Color(1, 0, 0), Color coLiq = Color(0, 0, 1));
+	const double getHeight() { return height; }
+	const double getRayBottom() { return rayBottom; }
+	const double getRayTop() { return rayTop; }
+
+	void update(double delta_t);
+	void render();
+};
+
+class Gobelet : public Form
+{
+private:
+	double height;
+	double rayBottom;
+	double rayTop;
+public:
+	Gobelet(double height = 1.0, double rayBottom = 0.5, double rayTop = 1, Color co = Color(1, 0, 0));
+
+	void update(double delta_t);
+	void render();
+
+};
+
+class Liquide : public Form
+{
+private:
+	// The sphere center is aligned with the coordinate system origin
+	// => no center required here, information is stored in the anim object
+	double height;
+	double rayBottom;
+	double rayTop;
+public:
+	Liquide(double height = 1.0, double rayBottom = 0.5, double rayTop = 1, Color co = Color(0, 0, 1));
+	const double getHeight() { return height; }
+	const double getRayBottom() { return rayBottom; }
+	const double getRayTop() { return rayTop; }
+
+	void update(double delta_t);
+	void render();
+};
+
+
+class Table : public Form
+{
+private:
+	double height;
+	double lenght;
+	double width;
+public:
+	Table(double hei, double len, double wi);
+	const double getHeight() { return height; }
+	const double getLenght() { return lenght; }
+	const double getWidth() { return width; }
+
+	void update(double delta_t);
+	void render();
+};
+
+
+class Personnage : public Form
+{
+private:
+
+public:
+	Personnage();
+	void update(double delta_t);
+	void render();
+};
+
+class Parallelepipede : public Form
+{
+private:
+	double length;
+	double width;
+	double height;
+
+public:
+	Parallelepipede(double len, double wid, double hei, Color co);
+
+
+	void update(double delta_t);
+	void render();
+};
 #endif // FORMS_H_INCLUDED
