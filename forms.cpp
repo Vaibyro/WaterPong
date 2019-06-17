@@ -5,6 +5,7 @@
 
 #include <SDL.h>
 #include "forms.h"
+#include "Project_App3/physics.h"
 
 using namespace std;
 
@@ -19,11 +20,11 @@ void Form::render()
 {
     // Point of view for rendering
     // Common for all Forms
-    Vector org = anim->getPosition();
+    Vector3 org = anim->getPosition();
     glTranslated(org.x, org.y, org.z);
     glColor3f(col.r, col.g, col.b);
 
-	Vector scale = anim->getScale();
+	Vector3 scale = anim->getScale();
 	glScaled(scale.x, scale.y, scale.z);
 }
 
@@ -51,7 +52,7 @@ void Sphere::render()
 }
 
 
-Cube_face::Cube_face(Vector v1, Vector v2, Vector org, double l, double w, Color cl)
+Cube_face::Cube_face(Vector3 v1, Vector3 v2, Vector3 org, double l, double w, Color cl)
 {
     vdir1 = 1.0 / v1.norm() * v1;
     vdir2 = 1.0 / v2.norm() * v2;
@@ -100,20 +101,109 @@ void Axis::update(double delta_t)
 
 void Axis::render()
 {
-	Form::render();
+	auto ry = Ray(Vector3(0, 1, 0), GREEN);
+	ry.setAnim(anim);
+	ry.render();
+	
+	glPopMatrix();
+	glPushMatrix();
 
-	// Render the coordinates system
-	glBegin(GL_LINES);
+	auto rx = Ray(Vector3(1, 0, 0), RED);
+	rx.setAnim(anim);
+	rx.render();
+
+	glPopMatrix();
+	glPushMatrix();
+
+	auto rz = Ray(Vector3(0, 0, 1), BLUE);
+	rz.setAnim(anim);
+	rz.render();
+}
+
+
+void Plane::update(double delta_t)
+{
+	// Do nothing, no physics associated to a Cube_face
+}
+
+
+void Plane::render()
+{
+	Vector3 org = anim->getPosition();
+	glTranslated(org.x - length / 2.0, org.y, org.z - width / 2.0);
+	glColor3f(col.r, col.g, col.b);
+
+	Vector3 scale = anim->getScale();
+	glScaled(scale.x, scale.y, scale.z);
+	
+	Point p1(0, 0, 0);
+	Point p4(length, 0, 0);
+	Point p2(0, 0, width);
+	Point p3(length, 0, width);
+
+	glBegin(GL_QUADS);
 	{
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glVertex3i(0, 0, 0);
-		glVertex3i(1, 0, 0);
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glVertex3i(0, 0, 0);
-		glVertex3i(0, 1, 0);
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex3i(0, 0, 0);
-		glVertex3i(0, 0, 1);
+		glColor3f(1, 1, 0);
+		glVertex3d(p1.x, p1.y, p1.z);
+		glColor3f(0, 1, 1);
+		glVertex3d(p2.x, p2.y, p2.z);
+		glColor3f(1, 0, 1);
+		glVertex3d(p3.x, p3.y, p3.z);
+		glColor3f(0, 1, 0);
+		glVertex3d(p4.x, p4.y, p4.z);
 	}
 	glEnd();
+}
+
+Vector3& Plane::getNormal()
+{
+	Vector3 p1(anim->getPosition().x - length / 2.0, anim->getPosition().y, anim->getPosition().z - width / 2.0);
+	Vector3 p3(anim->getPosition().x + length / 2.0, anim->getPosition().y, anim->getPosition().z - width / 2.0);
+	Vector3 p2(anim->getPosition().x - length / 2.0, anim->getPosition().y, anim->getPosition().z + width / 2.0);
+	Vector3 dir = (p2 - p1) ^ (p3 - p1);
+	return dir;
+}
+
+
+
+void Ray::update(double delta_t)
+{
+	// Do nothing, no physics associated to a Cube_face
+}
+
+void Ray::render()
+{
+	Form::render();
+	Vector3 to = dirFromOrigin.normalize();
+	Vector3 org = anim->getPosition();
+
+
+	glTranslated(org.x, org.y, org.z);
+
+	// Draw the line
+	glBegin(GL_LINES);
+	{
+		glVertex3d(0, 0, 0);
+		glVertex3d(to.x, to.y, to.z);
+	}
+	glEnd();
+
+	glTranslated(to.x, to.y, to.z);
+
+	// Get the angle of rotation of the cap
+	double L = to.norm();
+	if ((to.x != 0.0) || (to.y != 0.0)) {
+		glRotated(atan2(to.y, to.x) / RADPERDEG, 0.0, 0.0, 1.0);
+		glRotated(atan2(sqrt(to.x * to.x + to.y * to.y), to.z) / RADPERDEG, 0.0, 1.0, 0.0);
+	}
+	else if (to.z < 0) {
+		glRotated(180, 1.0, 0.0, 0.0);
+	}
+
+	// Draw the cap
+	GLUquadric *quad = gluNewQuadric();
+	gluCylinder(quad, 0.05, 0, 0.1, 20, 1);
+	gluDeleteQuadric(quad);
+
+	//glTranslated(org.x - to.x, org.y - to.y, org.z - to.z);
 }

@@ -14,6 +14,7 @@
 #include "Project_App3\component.h"
 #include "Project_App3\scene.h"
 #include "Project_App3\mainScene.h"
+#include "Project_App3\matrix.h"
 
 using namespace std;
 
@@ -144,7 +145,7 @@ bool initGL()
 void update(shared_ptr<Scene> scene, double delta_t)
 {
 	// Update the list of forms
-	for (const auto& component : scene->getComponents()) 
+	for (const auto& component : scene->getComponents())
 	{
 		component->update(delta_t);
 	}
@@ -159,14 +160,27 @@ const void render(shared_ptr<Scene> scene, const Point& cam_pos)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+	
+
 	// Set the camera position and parameters
 	gluLookAt(cam_pos.x, cam_pos.y, cam_pos.z, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
+	// View matrix
+	double vm[16], pm[16];
+	glGetDoublev(GL_MODELVIEW_MATRIX, vm);
+	glGetDoublev(GL_PROJECTION_MATRIX, pm);
+	Matrix4 viewMatrix = Matrix4(vm);
+	Matrix4 projectionMatrix = Matrix4(pm);
+	scene->camera.viewMatrix = viewMatrix;
+	scene->camera.projectionMatrix = projectionMatrix;
+
+
 
 	// Isometric view
 	//glRotated(-45, 0, 1, 0);
 	//glRotated(30, 1, 0, -1);
 
-	//glScaled(0.05, 0.05, 0.05);
+	//glScaled(0.9, 0.9, 0.9);
 
 	// Render the list of forms
 	for (const auto& component : scene->getComponents())
@@ -214,16 +228,17 @@ int main(int argc, char* args[])
 		SDL_Event event;
 
 		// Camera position
-		Point camera_position(0, 0.0, 5.0);
+		Point camera_position(5.0, 5.0, 5.0);
 
 		// Initialize the scene
 		shared_ptr<Scene> scene = make_shared<MainScene>();
-		scene->screenx = SCREEN_WIDTH;
-		scene->screeny = SCREEN_HEIGHT;
+		scene->screen.width = SCREEN_WIDTH;
+		scene->screen.height = SCREEN_HEIGHT;
 		scene->setup();
 
 		// Get first "current time"
 		previous_time = SDL_GetTicks();
+
 		// While application is running
 		while (!quit)
 		{
@@ -236,6 +251,32 @@ int main(int argc, char* args[])
 				switch (event.type)
 				{
 					// User requests quit
+
+				case SDL_MOUSEBUTTONDOWN:
+					//do whatever you want to do after a mouse button was pressed,
+					// e.g.:
+					if (event.button.button == SDL_BUTTON_LEFT) {
+						scene->mouse.leftButtonPressed = true;
+					}
+					else if (event.button.button == SDL_BUTTON_RIGHT) {
+						scene->mouse.rightButtonPressed = true;
+					}
+					break;
+
+				case SDL_MOUSEBUTTONUP:
+					//do whatever you want to do after a mouse button was pressed,
+					// e.g.:
+					if (event.button.button == SDL_BUTTON_LEFT) {
+						scene->mouse.leftButtonPressed = false;
+						scene->mouse.leftButtonReleased = true;
+					}
+					else if (event.button.button == SDL_BUTTON_RIGHT) {
+						scene->mouse.rightButtonPressed = false;
+						scene->mouse.rightButtonReleased = true;
+					}
+					break;
+
+
 				case SDL_QUIT:
 					quit = true;
 					break;
@@ -260,9 +301,24 @@ int main(int argc, char* args[])
 				}
 			}
 
-			// Mouse position
-			int x = 0, y = 0;
-			SDL_GetMouseState(&scene->mouseposx, &scene->mouseposy);
+			// Mouse position to scene
+			SDL_GetMouseState(&scene->mouse.posX, &scene->mouse.posY);
+
+			// Raycast
+			double x1, y1, z1, x2, y2, z2;
+			double matModelView[16], matProjection[16];
+			int viewport[4];
+			glGetDoublev(GL_MODELVIEW_MATRIX, matModelView);
+			glGetDoublev(GL_PROJECTION_MATRIX, matProjection);
+			glGetIntegerv(GL_VIEWPORT, viewport);
+			double winX = (double) scene->mouse.posX;
+			double winY = viewport[3] - (double) scene->mouse.posY;
+			gluUnProject(winX, winY, 0.0, matModelView, matProjection,
+				viewport, &x1, &y1, &z1);
+			gluUnProject(winX, winY, 1.0, matModelView, matProjection,
+				viewport, &x2, &y2, &z2);
+			scene->camera.raycastStart = Vector3(x1, y1, z1);
+			scene->camera.raycastEnd = Vector3(x2, y2, z2);
 
 			// Update the scene
 			current_time = SDL_GetTicks(); // get the elapsed time from SDL initialization (ms)
@@ -273,12 +329,18 @@ int main(int argc, char* args[])
 
 				double delta_t = 1e-3 * elapsed_time;
 
+				// Raise update event in scene
+				scene->update(delta_t);
+
 				// Update the scene objects
 				update(scene, delta_t); // International system units : seconds
 
-				// Raise update event in scene
-				scene->update(delta_t);
+
 			}
+
+			// Reset scene events
+			scene->mouse.rightButtonReleased = false;
+			scene->mouse.leftButtonReleased = false;
 
 			// Render the scene
 			render(scene, camera_position);

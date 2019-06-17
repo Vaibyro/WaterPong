@@ -20,7 +20,7 @@ public:
 	Component() { mass = 1.0; applyPhysics = true; };
 	Component(shared_ptr<Form> const& shape);
 	Component(shared_ptr<Form> const& shape, double x, double y, double z);
-	Component(shared_ptr<Form> const& shape, const Vector& position);
+	Component(shared_ptr<Form> const& shape, const Vector3& position);
 
 	// Get or set the mass of the object for physics (default = 1)
 	void setMass(double newmass) { mass = newmass; };
@@ -34,7 +34,7 @@ public:
 	void setAnimation(shared_ptr<Animation> anim) { animation = anim; };
 	shared_ptr<Animation> getAnimation() { return animation; };
 
-	shared_ptr<vector<shared_ptr<Collider>>> getColliders() { return make_shared<vector<shared_ptr<Collider>>>(colliders); };
+	vector<shared_ptr<Collider>>& getColliders() { return colliders; };
 	void addCollider(const shared_ptr<Collider>& collider) { colliders.push_back(collider); };
 
 	// Get or set the form
@@ -46,8 +46,9 @@ public:
 	//void fixedUpdate();
 
 	// Factories
-	static shared_ptr<Component> create(const shared_ptr<Form>& form, const Vector& pos);
+	static shared_ptr<Component> create(const shared_ptr<Form>& form, const Vector3& pos);
 
 	// Quick methods
-	void addSphereCollider(double r, const Vector& pos);
+	shared_ptr<SphereCollider> addSphereCollider(double r, const Vector3& pos);
+	shared_ptr<PlaneCollider> addPlaneCollider(double l, double w, const Vector3& pos);
 };

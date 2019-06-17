@@ -65,11 +65,11 @@ public:
 class Cube_face : public Form
 {
 private:
-	Vector vdir1, vdir2;
+	Vector3 vdir1, vdir2;
 	double length, width;
 public:
-	Cube_face(Vector v1 = Vector(1, 0, 0), Vector v2 = Vector(0, 0, 1),
-		Vector org = Vector(), double l = 1.0, double w = 1.0,
+	Cube_face(Vector3 v1 = Vector3(1, 0, 0), Vector3 v2 = Vector3(0, 0, 1),
+		Vector3 org = Vector3(), double l = 1.0, double w = 1.0,
 		Color cl = Color());
 	void update(double delta_t);
 	void render();
@@ -82,16 +82,29 @@ public:
 	void render();
 };
 
+
+
+// Class plane
 class Plane : public Form
 {
 private:
-	Vector vdir1, vdir2;
 	double length, width;
 public:
-	Plane
-	(Vector v1 = Vector(1, 0, 0), Vector v2 = Vector(0, 0, 1),
-		Vector org = Vector(), double l = 1.0, double w = 1.0,
-		Color cl = Color());
+	Plane(double l = 1.0, double w = 1.0) { length = l; width = w; };
+	Vector3& getNormal();
+	void update(double delta_t);
+	void render();
+};
+
+
+
+class Ray : public Form
+{
+private:
+	Vector3 dirFromOrigin;
+public:
+	Ray(const Vector3& dir) { dirFromOrigin = dir; };
+	Ray(const Vector3& dir, const Color& cl) { dirFromOrigin = dir; col = cl; };
 	void update(double delta_t);
 	void render();
 };
