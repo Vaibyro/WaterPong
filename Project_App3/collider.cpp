@@ -25,6 +25,24 @@ bool SphereCollider::collision(const shared_ptr<SphereCollider>& collider)
 	return d2 < (radius + collider->radius) * (radius + collider->radius);
 }
 
+bool SphereCollider::collision(const shared_ptr<BoxCollider>& collider)
+{
+	Vector3 sphereOrg = linkedAnimation->getPosition();
+	Vector3 boxOrg = collider->getAnimation()->getPosition();
+
+	cout << boxOrg << endl;
+
+	if (sphereOrg.x >= boxOrg.x
+		&& sphereOrg.x < boxOrg.x + collider->getLength()
+		&& sphereOrg.y >= boxOrg.y
+		&& sphereOrg.y < boxOrg.y + collider->getHeight()
+		&& sphereOrg.z >= boxOrg.z
+		&& sphereOrg.z < boxOrg.z + collider->getWidth())
+		return true;
+	else
+		return false;
+}
+
 bool SphereCollider::collision(const shared_ptr<PlaneCollider>& collider)
 {
 	Vector3 posOrgPlane = collider->getAnimation()->getPosition();
@@ -35,12 +53,8 @@ bool SphereCollider::collision(const shared_ptr<PlaneCollider>& collider)
 
 	// Normal vector of plane
 	Vector3 normal = collider->getNormal();
-
 	double fdis = normal * (posOrgSphere - posOrgPlane);
-
 	//fdis = (posOrgSphere - posOrgPlane) * normal;
-
-
 	//cout << normal << " * (" << posOrgSphere << " - " << posOrgPlane << ") = " << fdis << " !!! " << radius << endl;
 	return fdis - radius <= 10e-6;
 }
@@ -61,3 +75,4 @@ Vector3 Collider::closestPoint(const Vector3& a, const Vector3& b, const Vector3
 {
 	return (a - b) ^ (a - point);
 }
+

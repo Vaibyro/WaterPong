@@ -19,8 +19,9 @@ const Color BLUE(0.0f, 0.0f, 1.0f);
 const Color GREEN(0.0f, 1.0f, 0.0f);
 const Color YELLOW(1.0f, 1.0f, 0.0f);
 const Color WHITE(1.0f, 1.0f, 1.0f);
-const Color BROWN(0.3, 0, 0);
-const Color SKIN(0.9, 0.8, 0);
+const Color BROWN(0.3f, 0.0f, 0.0f);
+const Color SKIN(0.9f, 0.8f, 0.0f);
+const Color FLOOR(0.6f, 0.6f, 0.6f);
 
 
 // Generic class to render and animate an object
@@ -35,7 +36,6 @@ public:
 
 	void setColor(const Color& color) { col = color; };
 	const Color& getColor() { return col; };
-
 
 	// This method should update the anim object with the corresponding physical model
 	// It has to be done in each inherited class, otherwise all forms will have the same movements !
@@ -97,7 +97,7 @@ class Plane : public Form
 private:
 	double length, width;
 public:
-	Plane(double l = 1.0, double w = 1.0) { length = l; width = w; };
+	Plane(double l = 1.0, double w = 1.0, Color color = FLOOR) { length = l; width = w; col = color; };
 	Vector3& getNormal();
 	void update(double delta_t);
 	void render();
@@ -186,14 +186,18 @@ public:
 class Table : public Form
 {
 private:
-	double height;
+	double heightTotal;
+	double heightTray;
 	double lenght;
 	double width;
+	double widthFoot;
 public:
-	Table(double hei, double len, double wi);
-	const double getHeight() { return height; }
+	Table(double hei, double heiTray, double len, double wi, double wiFoot);
+	const double getHeightTotal() { return heightTotal; }
+	const double getHeightTray() { return heightTray; }
 	const double getLenght() { return lenght; }
 	const double getWidth() { return width; }
+	const double getWidthFoot() { return widthFoot; }
 
 	void update(double delta_t);
 	void render();

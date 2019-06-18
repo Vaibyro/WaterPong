@@ -10,11 +10,12 @@ public:
 	void update(double delta_t);
 private:
 	shared_ptr<Component> balleSouris;
-	shared_ptr<PlaneCollider> coll;
+	shared_ptr<PlaneCollider> collPlane;
+	shared_ptr<BoxCollider> collTable;
 	shared_ptr<Component> ray;
 	shared_ptr<Component> rayThrow;
 	//shared_ptr<Component> point;
-	shared_ptr<Component> balleTest;
+	shared_ptr<Component> balle;
 	double radius;
 	double rB;
 

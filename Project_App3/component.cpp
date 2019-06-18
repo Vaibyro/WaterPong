@@ -45,3 +45,10 @@ shared_ptr<PlaneCollider> Component::addPlaneCollider(double l, double w, const 
 	colliders.push_back(ptr);
 	return ptr;
 }
+
+shared_ptr<BoxCollider> Component::addBoxCollider(double h, double l, double w, const Vector3& pos)
+{
+	auto ptr = make_shared<BoxCollider>(h, l, w, animation);
+	colliders.push_back(ptr);
+	return ptr;
+}

@@ -146,13 +146,13 @@ void Plane::render()
 
 	glBegin(GL_QUADS);
 	{
-		glColor3f(1, 1, 0);
+		//glColor3f(1, 1, 0);
 		glVertex3d(p1.x, p1.y, p1.z);
-		glColor3f(0, 1, 1);
+		//glColor3f(0, 1, 1);
 		glVertex3d(p2.x, p2.y, p2.z);
-		glColor3f(1, 0, 1);
+		//glColor3f(1, 0, 1);
 		glVertex3d(p3.x, p3.y, p3.z);
-		glColor3f(0, 1, 0);
+		//glColor3f(0, 1, 0);
 		glVertex3d(p4.x, p4.y, p4.z);
 	}
 	glEnd();
@@ -232,6 +232,10 @@ void Ray::render()
 	glEnd();
 }
 
+
+
+
+
 ///////////////////////////////////
 ///////////		GLASS	///////////
 ///////////////////////////////////
@@ -259,11 +263,11 @@ void Verre::render()
 	glPushMatrix();
 
 	// liquide
-	Liquide liquide = Liquide(height - 0.2, rayBottom - 0.05, rayTop - 0.05, colorLiquide);
+	Liquide liquide = Liquide(height - 0.005, rayBottom - 0.002, rayTop - 0.002, colorLiquide);
 	// Liquide(double hei, double rayB, double rayT, Color co)
-	auto animLiquide = make_shared<Animation>(anim->getPosition().x * 0.15,
-		anim->getPosition().y * 0.15,
-		anim->getPosition().z * 0.15);
+	auto animLiquide = make_shared<Animation>(anim->getPosition().x,
+		anim->getPosition().y,
+		anim->getPosition().z);
 	liquide.setAnim(animLiquide);
 	liquide.render();
 
@@ -273,9 +277,9 @@ void Verre::render()
 	// gobelet
 	Gobelet gobelet = Gobelet(height, rayBottom, rayTop, colorGobelet);
 	// Gobelet(double hei, double rayB, double rayT, Color co)
-	auto animGobelet = make_shared<Animation>(anim->getPosition().x * 0.15,
-		anim->getPosition().y * 0.15,
-		anim->getPosition().z * 0.15);
+	auto animGobelet = make_shared<Animation>(anim->getPosition().x,
+		anim->getPosition().y,
+		anim->getPosition().z);
 	gobelet.setAnim(animGobelet);
 	gobelet.render();
 
@@ -311,7 +315,6 @@ void Liquide::render()
 	// set possition
 	glTranslated(anim->getPosition().x, anim->getPosition().y, anim->getPosition().z);
 	glRotated(90, -1, 0, 0);
-	glScaled(0.15, 0.15, 0.15);
 	glColor3f(col.r, col.g, col.b);
 
 	gluQuadricDrawStyle(params, GLU_FILL);
@@ -352,26 +355,31 @@ void Gobelet::render()
 	// set possition
 	glTranslated(anim->getPosition().x, anim->getPosition().y, anim->getPosition().z);
 	glRotated(90, -1, 0, 0);
-	glScaled(0.15, 0.15, 0.15);
 	glColor3f(col.r, col.g, col.b);
 
 	gluQuadricDrawStyle(params, GLU_LINE);
 
-	gluCylinder(params, this->rayBottom, this->rayTop, this->height, 20, 1);
+	gluCylinder(params, rayBottom, rayTop, height, 20, 1);
 	//gluCylinder(GLUquadric* params,base,top,height,slices,stacks);
 	gluDeleteQuadric(params);
 }
 
 
 
+
+
+
+
 ///////////////////////////////
 /////////	TABLE	///////////
 ///////////////////////////////
-Table::Table(double hei, double len, double wi)
+Table::Table(double heiTotal, double heiTray, double len, double wi, double wiFoot)
 {
-	height = hei;
+	heightTotal = heiTotal;
+	heightTray = heiTray;
 	lenght = len;
 	width = wi;
+	widthFoot = wiFoot;
 }
 
 void Table::update(double delta_t)
@@ -385,10 +393,10 @@ void Table::render()
 	glPushMatrix();
 
 	// pied 1
-	Parallelepipede pied1 = Parallelepipede(3, 3, 8, RED);
+	Parallelepipede pied1 = Parallelepipede(widthFoot, widthFoot, heightTotal-heightTray, RED);
 	//Parallelepipede(double len, double wid, double hei, Color co);
 	auto animPied1 = make_shared<Animation>(anim->getPosition().x,
-		anim->getPosition().y - 8,
+		anim->getPosition().y,
 		anim->getPosition().z);
 	pied1.setAnim(animPied1);
 	pied1.render();
@@ -397,10 +405,10 @@ void Table::render()
 	glPushMatrix();
 
 	// pied 2
-	Parallelepipede pied2 = Parallelepipede(3, 3, 8, RED);
+	Parallelepipede pied2 = Parallelepipede(widthFoot, widthFoot, heightTotal - heightTray, RED);
 	auto animPied2 = make_shared<Animation>(anim->getPosition().x,
-		anim->getPosition().y - 8,
-		anim->getPosition().z + width - 3);
+		anim->getPosition().y,
+		anim->getPosition().z + width - widthFoot);
 	pied2.setAnim(animPied2);
 	pied2.render();
 
@@ -408,10 +416,10 @@ void Table::render()
 	glPushMatrix();
 
 	// pied 3
-	Parallelepipede pied3 = Parallelepipede(3, 3, 8, RED);
-	auto animPied3 = make_shared<Animation>(anim->getPosition().x + lenght - 3,
-		anim->getPosition().y - 8,
-		anim->getPosition().z);
+	Parallelepipede pied3 = Parallelepipede(widthFoot, widthFoot, heightTotal - heightTray, RED);
+	auto animPied3 = make_shared<Animation>(anim->getPosition().x + lenght - widthFoot,
+		anim->getPosition().y,
+		anim->getPosition().z + width - widthFoot);
 	pied3.setAnim(animPied3);
 	pied3.render();
 
@@ -419,10 +427,10 @@ void Table::render()
 	glPushMatrix();
 
 	// pied 4
-	Parallelepipede pied4 = Parallelepipede(3, 3, 8, RED);
-	auto animPied4 = make_shared<Animation>(anim->getPosition().x + lenght - 3,
-		anim->getPosition().y - 8,
-		anim->getPosition().z + width -3);
+	Parallelepipede pied4 = Parallelepipede(widthFoot, widthFoot, heightTotal - heightTray, RED);
+	auto animPied4 = make_shared<Animation>(anim->getPosition().x + lenght - widthFoot,
+		anim->getPosition().y,
+		anim->getPosition().z);
 	pied4.setAnim(animPied4);
 	pied4.render();
 
@@ -431,8 +439,11 @@ void Table::render()
 
 	// plateau
 	// pied 1
-	Parallelepipede plateau = Parallelepipede(lenght, width, height, GREEN);
-	plateau.setAnim(anim);
+	Parallelepipede plateau = Parallelepipede(lenght, width, heightTray, GREEN);
+	auto animPlateau = make_shared<Animation>(anim->getPosition().x,
+		anim->getPosition().y + heightTotal - heightTray,
+		anim->getPosition().z);
+	plateau.setAnim(animPlateau);
 	plateau.render();
 
 	glPopMatrix();
@@ -459,15 +470,15 @@ void Personnage::render()
 	glPopMatrix();
 	glPushMatrix();
 
-	double rayonTete = 2;
-	double largeurBras = 2;
-	double hauteurBras = 10;
-	double largeurJambe = 3;
-	double hauteurJambe = 9;
-	double largeurTronc = 8;
-	double hauteurTronc = 10;
-	double hauteurBassin = 3;
-	double epaisseur = 3;
+	double rayonTete = 0.15;
+	double largeurBras = 0.1;
+	double hauteurBras = 0.5;
+	double largeurJambe = 0.2;
+	double hauteurJambe = 0.8;
+	double largeurTronc = 0.5;
+	double hauteurTronc = 0.5;
+	double hauteurBassin = 0.25;
+	double epaisseur = 0.3;
 
 	Color couleurJambe = BLUE;
 	Color couleurBassin = BROWN;
@@ -476,7 +487,7 @@ void Personnage::render()
 
 	// jambe gauche
 	// Parallelepipede(double len, double wid, double hei, Color co)
-	Parallelepipede jambeGauche = Parallelepipede(largeurJambe, epaisseur, hauteurJambe, couleurJambe);
+	Parallelepipede jambeGauche = Parallelepipede(epaisseur, largeurJambe, hauteurJambe, couleurJambe);
 	auto animJambeGauche = make_shared<Animation>(anim->getPosition().x,
 		anim->getPosition().y,
 		anim->getPosition().z);
@@ -487,7 +498,7 @@ void Personnage::render()
 	glPushMatrix();
 
 	// jambe droite
-	Parallelepipede jambeDroite = Parallelepipede(largeurJambe, epaisseur, hauteurJambe, couleurJambe);
+	Parallelepipede jambeDroite = Parallelepipede(epaisseur, largeurJambe, hauteurJambe, couleurJambe);
 	auto animJambeDroite = make_shared<Animation>(anim->getPosition().x,
 		anim->getPosition().y,
 		anim->getPosition().z + largeurTronc - largeurJambe);
@@ -543,10 +554,10 @@ void Personnage::render()
 
 	// tete
 	// Sphere(double r, Color cl)
-	Sphere tete = Sphere(rayonTete * 0.15, couleurPeau);
-	auto animTete = make_shared<Animation>((anim->getPosition().x + rayonTete) * 0.15,
-		(anim->getPosition().y + hauteurJambe + hauteurBassin + hauteurTronc + rayonTete) * 0.15,
-		(anim->getPosition().z + (largeurTronc/2)) * 0.15);
+	Sphere tete = Sphere(rayonTete, couleurPeau);
+	auto animTete = make_shared<Animation>((anim->getPosition().x + rayonTete),
+		(anim->getPosition().y + hauteurJambe + hauteurBassin + hauteurTronc + rayonTete),
+		(anim->getPosition().z + (largeurTronc/2)));
 	tete.setAnim(animTete);
 	tete.render();
 
@@ -577,7 +588,7 @@ void Parallelepipede::update(double delta_t)
 
 void Parallelepipede::render()
 {
-	glScaled(0.15, 0.15, 0.15);
+	//glScaled(0.15, 0.15, 0.15);
 
 	glEnable(GL_DEPTH_TEST);
 
