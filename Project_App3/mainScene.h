@@ -15,7 +15,7 @@ private:
 	shared_ptr<Component> ray;
 	shared_ptr<Component> rayThrow;
 	//shared_ptr<Component> point;
-	shared_ptr<Component> balleTest;
+	shared_ptr<Component> balle;
 	double radius;
 	double rB;
 

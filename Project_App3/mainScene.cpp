@@ -28,9 +28,9 @@ void MainScene::setup()
 	ray = createComponent(shared_ptr<Form>(new Arrow(Vector3(0, 0, 0), RED)));
 	rayThrow = createComponent(shared_ptr<Form>(new Ray(Vector3(0, 0, 0), Vector3(0, 0, 0), RED)));
 
-	balleTest = createComponent(shared_ptr<Form>(new Sphere(radSphere, WHITE)), Vector3(0, 3, 0));
-	balleTest->addSphereCollider(radSphere, Vector3(0, 0, 0));
-	balleTest->getAnimation()->setSpeed(-2, 0, -1);
+	balle = createComponent(shared_ptr<Form>(new Sphere(radSphere, WHITE)), Vector3(0, 3, 0));
+	balle->addSphereCollider(radSphere, Vector3(0, 0, 0));
+	balle->getAnimation()->setSpeed(-2, 0, -1);
 
 	d = 5.0;
 
@@ -86,7 +86,7 @@ void MainScene::update(double delta_t)
 	// Detect collision ball / plane
 	bool collisionSol = false;
 	bool collisionTable = false;
-	for (auto& collider : balleTest->getColliders())
+	for (auto& collider : balle->getColliders())
 	{
 		collisionSol = collider->collision(collPlane);
 		collisionTable = collider->collision(collTable);
@@ -104,22 +104,22 @@ void MainScene::update(double delta_t)
 
 	if (!lastCollision && collisionSol)
 	{
-		speed_x = balleTest->getAnimation()->getSpeed().x * coeff;
-		speed_y = balleTest->getAnimation()->getSpeed().y * -coeff;
-		speed_z = balleTest->getAnimation()->getSpeed().z * coeff;
+		speed_x = balle->getAnimation()->getSpeed().x * coeff;
+		speed_y = balle->getAnimation()->getSpeed().y * -coeff;
+		speed_z = balle->getAnimation()->getSpeed().z * coeff;
 		lastCollision = true;
 	}
 	else
 	{
-		speed_x = balleTest->getAnimation()->getSpeed().x;
-		speed_y = balleTest->getAnimation()->getSpeed().y - (GRAVITY * delta_t); // TODO delta_t^2 bizarre
-		speed_z = balleTest->getAnimation()->getSpeed().z;
+		speed_x = balle->getAnimation()->getSpeed().x;
+		speed_y = balle->getAnimation()->getSpeed().y - (GRAVITY * delta_t); // TODO delta_t^2 bizarre
+		speed_z = balle->getAnimation()->getSpeed().z;
 
 		//cout << abs(speed_y) << endl;
 		lastCollision = false;
 	}
 
-	balleTest->getAnimation()->setSpeed(speed_x, speed_y, speed_z);
+	balle->getAnimation()->setSpeed(speed_x, speed_y, speed_z);
 
 	// Assign pos
 	double x, y, z;
@@ -129,7 +129,7 @@ void MainScene::update(double delta_t)
 		x = (2.0f * mouse.posX) / screen.width * 2.0 - 2.0f;
 		y = 1.5f - (2.0f * mouse.posY) / screen.width * 1.5;
 		z = 0.0f;
-		balleTest->getAnimation()->setSpeed(0, 0, 0);
+		balle->getAnimation()->setSpeed(0, 0, 0);
 
 		if (!mousePressedLastState) {
 			previous_time = SDL_GetTicks();
@@ -140,13 +140,13 @@ void MainScene::update(double delta_t)
 	}
 	else
 	{
-		x = balleTest->getAnimation()->getPosition().x + balleTest->getAnimation()->getSpeed().x * delta_t;
-		y = balleTest->getAnimation()->getPosition().y + balleTest->getAnimation()->getSpeed().y * delta_t;// - GRAVITY * (delta_t * delta_t) / 2.0;
-		z = balleTest->getAnimation()->getPosition().z + balleTest->getAnimation()->getSpeed().z * delta_t;
+		x = balle->getAnimation()->getPosition().x + balle->getAnimation()->getSpeed().x * delta_t;
+		y = balle->getAnimation()->getPosition().y + balle->getAnimation()->getSpeed().y * delta_t - GRAVITY * (delta_t * delta_t) / 2.0;
+		z = balle->getAnimation()->getPosition().z + balle->getAnimation()->getSpeed().z * delta_t;
 	}
 
 
-	balleTest->getAnimation()->setPosition(x, y, z);
+	balle->getAnimation()->setPosition(x, y, z);
 
 	if (mouse.leftButtonReleased)
 	{
@@ -163,7 +163,7 @@ void MainScene::update(double delta_t)
 		// Throw ball by mouse
 
 
-		mouseArrival = balleTest->getAnimation()->getPosition();
+		mouseArrival = balle->getAnimation()->getPosition();
 
 
 		//ray->setForm(shared_ptr<Form>(new Ray(mouseDeparture, mouseArrival)));
@@ -171,14 +171,14 @@ void MainScene::update(double delta_t)
 		rayThrow->setForm(shared_ptr<Form>(new Ray(mouseArrival, mouseDeparture)));
 
 		Vector3 throwingSpeed = distance * 5.0 * (mouseArrival - mouseDeparture).normalize();
-		balleTest->getAnimation()->setSpeed(throwingSpeed);
+		balle->getAnimation()->setSpeed(throwingSpeed);
 	}
 
 
 	// Garde fou
-	if (balleTest->getY() - radSphere <= niveauSol)
+	if (balle->getY() - radSphere <= niveauSol)
 	{
-		balleTest->setY(niveauSol + radSphere);
+		balle->setY(niveauSol + radSphere);
 	}
 
 	/*
