@@ -25,14 +25,13 @@ void MainScene::setup()
 
 
 
-	auto planeform = shared_ptr<Plane>(new Plane(3.0, 3.0));
-	auto plane = createComponent(planeform, Vector3(0, 0, 0));
+	auto planeform = shared_ptr<Plane>(new Plane(15.0, 15.0));
+	auto plane = createComponent(planeform, Vector3(0, niveauSol, 0));
 	coll = plane->addPlaneCollider(3.0, 3.0, Vector3(0, 0, 0));
 
 	ray = createComponent(shared_ptr<Form>(new Arrow(Vector3(0, 0, 0), RED)));
 	rayThrow = createComponent(shared_ptr<Form>(new Ray(Vector3(0, 0, 0), Vector3(0, 0, 0), RED)));
 
-	double radSphere = 0.1;
 	balleTest = createComponent(shared_ptr<Form>(new Sphere(radSphere, WHITE)), Vector3(0, 3, 0));
 	balleTest->addSphereCollider(radSphere, Vector3(0, 0, 0));
 	balleTest->getAnimation()->setSpeed(-2, 0, -1);
@@ -173,9 +172,9 @@ void MainScene::update(double delta_t)
 
 
 	// Garde fou
-	if (balleTest->getY() - 0.2 <= -1)
+	if (balleTest->getY() - radSphere <= niveauSol)
 	{
-		balleTest->setY(-1 + 0.2);
+		balleTest->setY(niveauSol + radSphere);
 	}
 
 	/*

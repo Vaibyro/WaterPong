@@ -20,6 +20,8 @@ private:
 
 	double d;
 
+	double radSphere = 0.1;
+	double niveauSol = -10.0 * 0.15;
 	bool lastCollision;
 	bool mousePressedLastState;
 
