@@ -26,14 +26,14 @@ void MainScene::setup()
 
 
 	auto planeform = shared_ptr<Plane>(new Plane(3.0, 3.0));
-	auto plane = createComponent(planeform, Vector3(0, -1, 0));
+	auto plane = createComponent(planeform, Vector3(0, 0, 0));
 	coll = plane->addPlaneCollider(3.0, 3.0, Vector3(0, 0, 0));
 
 	ray = createComponent(shared_ptr<Form>(new Arrow(Vector3(0, 0, 0), RED)));
 	rayThrow = createComponent(shared_ptr<Form>(new Ray(Vector3(0, 0, 0), Vector3(0, 0, 0), RED)));
 
-	double radSphere = 0.2;
-	balleTest = createComponent(shared_ptr<Form>(new Sphere(radSphere, GREEN)), Vector3(0, 3, 0));
+	double radSphere = 0.1;
+	balleTest = createComponent(shared_ptr<Form>(new Sphere(radSphere, WHITE)), Vector3(0, 3, 0));
 	balleTest->addSphereCollider(radSphere, Vector3(0, 0, 0));
 	balleTest->getAnimation()->setSpeed(-2, 0, -1);
 
@@ -41,7 +41,7 @@ void MainScene::setup()
 
 	// Décor
 
-	/*
+	
 	// Table
 	table = createComponent(shared_ptr<Form>(new Table(2, 30, 15)), Vector3(-30, -2, -7.5));
 	// Verres
@@ -67,7 +67,7 @@ void MainScene::setup()
 	// personnages
 	personnage1 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-40, -10, 5));
 	personnage2 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-40, -10, -15));
-	*/
+	
 
 	//auto spherex = createComponent(shared_ptr<Form>(new Sphere(0.5, BLUE)), Vector3(-1, 0, 0));
 	cout << "Scene setup finished !" << endl;

@@ -225,7 +225,7 @@ int main(int argc, char* args[])
 		SDL_Event event;
 
 		// Camera position
-		Point camera_position(0.0, 0.0, 5.0);
+		Point camera_position(10.0, 10.0, 15.0);
 
 		// Initialize the scene
 		shared_ptr<Scene> scene = make_shared<MainScene>();

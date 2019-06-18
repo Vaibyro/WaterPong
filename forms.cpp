@@ -255,11 +255,6 @@ void Verre::update(double delta_t)
 void Verre::render()
 {
 
-	cout << "possition verre :" << endl;
-	cout << "x = " << anim->getPosition().x << endl;
-	cout << "y = " << anim->getPosition().y << endl;
-	cout << "z = " << anim->getPosition().z << endl;
-
 	glPopMatrix();
 	glPushMatrix();
 
