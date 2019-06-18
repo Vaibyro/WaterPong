@@ -7,7 +7,7 @@
 #include <gl\glew.h>
 #include <SDL_opengl.h>
 //#include <gl\glu.h> // Deja inclus dans glew.h
-
+#include "imgui.h"
 #include <SDL.h>
 /*
  * Une fois au debut de la creation de la scene.
@@ -97,6 +97,10 @@ void MainScene::setup()
 	camTranslationSpeed = 5.0;
 
 	cout << "Main scene setup finished" << endl;
+
+
+	ImGui::Text("Hello, world %d", 123);
+	
 }
 
 

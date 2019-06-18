@@ -15,6 +15,7 @@
 #include "Project_App3\scene.h"
 #include "Project_App3\mainScene.h"
 #include "Project_App3\matrix.h"
+#include "Project_App3\imgui.h"
 
 using namespace std;
 
@@ -225,6 +226,12 @@ int main(int argc, char* args[])
 
 	// OpenGL context
 	SDL_GLContext gContext;
+
+	// tests interface
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+	auto& io = ImGui::GetIO();
+	io.BackendRendererName = "imgui_impl_opengl2";
 
 	// Start up SDL and create window
 	if (!init(&gWindow, &gContext))
