@@ -38,34 +38,36 @@ void MainScene::setup()
 	double coefficientReduc = 1;
 
 	// Table
-	table = createComponent(shared_ptr<Form>(new Table(2, 30, 15)), Vector3(-30, -2, -7.5));
+	table = createComponent(shared_ptr<Form>(new Table(0.7, 0.1, 2.4, 0.6, 0.1)), Vector3(-2.4, -0.7, -0.3));
+	// Table(double heiTotal, double heiTray, double len, double wi, double wiFoot)
 	collTable = table->addBoxCollider(10.0 * coefficientReduc, 30.0 * coefficientReduc, 15.0 * coefficientReduc, Vector3(0, 0, 0));
 
-	// Verres
-	double heightGlass = 3;
-	double rayBottomGlass = 1;
-	double rayTopGlass = 1.5;
-	double decalageTable = 3;
-	// Verre(double hei, double rayB, double rayT, Color coGob, Color coLiq)
-	verre1 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-30+decalageTable, 0, -7.5+ decalageTable));
-	verre2 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-30 + decalageTable, 0, -4.5 + decalageTable));
-	verre3 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-30 + decalageTable, 0, -1.5 + decalageTable));
-	verre4 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-30 + decalageTable, 0, 1.5 + decalageTable));
-
-	verre5 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-27.5 + decalageTable, 0, -6 + decalageTable));
-	verre6 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-27.5 + decalageTable, 0, -3 + decalageTable));
-	verre7 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-27.5 + decalageTable, 0, 0 + decalageTable));
-
-	verre8 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-25 + decalageTable, 0, -4.5 + decalageTable));
-	verre9 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-25 + decalageTable, 0, -1.5 + decalageTable));
-
-	verre10 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-22.5 + decalageTable, 0, -3 + decalageTable));
-
-	// personnages
-	personnage1 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-40, -10, 5));
-	personnage2 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-40, -10, -15));
 	
+	// Verres
+	double heightGlass = 0.2;
+	double rayBottomGlass = 0.03;
+	double rayTopGlass = 0.05;
+	double decalageTable = 0.1;
+	// Verre(double hei, double rayB, double rayT, Color coGob, Color coLiq)
+	verre1 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.4 + decalageTable, 0, -0.3 + decalageTable + rayTopGlass));
+	verre2 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.4 + decalageTable, 0, -0.2 + decalageTable + rayTopGlass));
+	verre3 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.4 + decalageTable, 0, -0.1 + decalageTable + rayTopGlass));
+	verre4 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.4 + decalageTable, 0, 0 + decalageTable + rayTopGlass));
+	
+	verre5 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.3 + decalageTable, 0, -0.25 + decalageTable + rayTopGlass));
+	verre6 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.3 + decalageTable, 0, -0.15 + decalageTable + rayTopGlass));
+	verre7 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.3 + decalageTable, 0, -0.05 + decalageTable + rayTopGlass));
 
+	verre8 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.2 + decalageTable, 0, -0.2 + decalageTable + rayTopGlass));
+	verre9 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.2 + decalageTable, 0, -0.1 + decalageTable + rayTopGlass));
+
+	verre10 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.1 + decalageTable, 0, -0.15 + decalageTable + rayTopGlass));
+	
+	
+	// personnages
+	personnage1 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-3, -0.7, 0.3));
+	personnage2 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-3, -0.7, -0.8));
+	
 	//auto spherex = createComponent(shared_ptr<Form>(new Sphere(0.5, BLUE)), Vector3(-1, 0, 0));
 	cout << "Scene setup finished !" << endl;
 

@@ -186,14 +186,18 @@ public:
 class Table : public Form
 {
 private:
-	double height;
+	double heightTotal;
+	double heightTray;
 	double lenght;
 	double width;
+	double widthFoot;
 public:
-	Table(double hei, double len, double wi);
-	const double getHeight() { return height; }
+	Table(double hei, double heiTray, double len, double wi, double wiFoot);
+	const double getHeightTotal() { return heightTotal; }
+	const double getHeightTray() { return heightTray; }
 	const double getLenght() { return lenght; }
 	const double getWidth() { return width; }
+	const double getWidthFoot() { return widthFoot; }
 
 	void update(double delta_t);
 	void render();
