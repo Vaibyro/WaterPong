@@ -1,3 +1,4 @@
+#include <cmath>
 #include "mainScene.h"
 #include "component.h"
 #include "..\forms.h"
@@ -14,6 +15,13 @@
 void MainScene::setup()
 {
 
+	// Initialize cam
+	camera.position = Vector3(0, 0, 0);
+	camera.phi = 90.0;
+	camera.theta = 45.0;
+	camera.rho = 4.0;
+
+	// For debugging
 	auto axis = createComponent(shared_ptr<Form>(new Axis()), Vector3(0, 0, 0));
 
 	// ============= Balle
@@ -35,12 +43,11 @@ void MainScene::setup()
 	d = 5.0;
 
 	// ============= Décor
-	double coefficientReduc = 1;
 
 	// Table
 	table = createComponent(shared_ptr<Form>(new Table(0.7, 0.1, 2.4, 0.6, 0.1)), Vector3(-2.4, -0.7, -0.3));
 	// Table(double heiTotal, double heiTray, double len, double wi, double wiFoot)
-	collTable = table->addBoxCollider(10.0 * coefficientReduc, 30.0 * coefficientReduc, 15.0 * coefficientReduc, Vector3(0, 0, 0));
+	collTable = table->addBoxCollider(10.0, 30.0, 15.0, Vector3(0, 0, 0));
 
 	
 	// Verres
@@ -69,19 +76,31 @@ void MainScene::setup()
 	personnage2 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-3, -0.7, -0.8));
 	
 	//auto spherex = createComponent(shared_ptr<Form>(new Sphere(0.5, BLUE)), Vector3(-1, 0, 0));
-	cout << "Scene setup finished !" << endl;
-
 
 	lastCollision = false;
 
 	previous_time = 0;
 	current_time = 0;
+
+	// Middle click
+	oldMouseMiddleFactorX = 0.0;
+	oldMouseMiddleFactorY = 0.0;
+	middleClickX = 0.0;
+	middleClickY = 0.0;
+
+	// Right click
+	oldMouseRightFactorX = 0.0;
+	oldMouseRightFactorY = 0.0;
+	rightClickX = 0.0;
+	rightClickY = 0.0;
+
+	camTranslationSpeed = 5.0;
+
+	cout << "Main scene setup finished" << endl;
 }
 
-/*
- * Une fois par frame graphique (depend donc de la vitesse du PC et de l'affichage).
- */
-void MainScene::update(double delta_t)
+
+void MainScene::physiqueBalle(double delta_t)
 {
 	// Detect collision ball / plane
 	bool collisionSol = false;
@@ -126,8 +145,8 @@ void MainScene::update(double delta_t)
 
 	if (mouse.leftButtonPressed) {
 
-		x = (2.0f * mouse.posX) / screen.width * 2.0 - 2.0f;
-		y = 1.5f - (2.0f * mouse.posY) / screen.width * 1.5;
+		x = (2.0 * mouse.posX) / screen.width * 2.0 - 2.0;
+		y = 1.5 - (2.0 * mouse.posY) / screen.width * 1.5;
 		z = 0.0f;
 		balle->getAnimation()->setSpeed(0, 0, 0);
 
@@ -145,8 +164,8 @@ void MainScene::update(double delta_t)
 		z = balle->getAnimation()->getPosition().z + balle->getAnimation()->getSpeed().z * delta_t;
 	}
 
-
 	balle->getAnimation()->setPosition(x, y, z);
+
 
 	if (mouse.leftButtonReleased)
 	{
@@ -174,13 +193,137 @@ void MainScene::update(double delta_t)
 		balle->getAnimation()->setSpeed(throwingSpeed);
 	}
 
-
 	// Garde fou
 	if (balle->getY() - radSphere <= niveauSol)
 	{
 		balle->setY(niveauSol + radSphere);
 	}
+}
 
+
+
+/*
+ * Gestion de la rotation camera.
+ */
+void MainScene::gestionCamera()
+{
+	// ================================================================================================================
+	// VARIABLES FOR CAMERA
+	// ----------------------------------------------------------------------------------------------------------------
+	double mousePosNormalX = (2.0 * mouse.posX) / screen.width - 1.0;
+	double mousePosNormalY = (2.0 * mouse.posY) / screen.height - 1.0;
+
+
+	// ================================================================================================================
+	// ZOOM
+	// ----------------------------------------------------------------------------------------------------------------
+	if (mouse.wheel == 1 && camera.rho > 0.5f)
+	{
+		camera.rho -= 0.5f;
+	}
+
+	if (mouse.wheel == -1 && camera.rho < 40.0f)
+	{
+		camera.rho += 0.5f;
+	}
+	// ----------------------------------------------------------------------------------------------------------------
+
+
+	// ================================================================================================================
+	// Rotation around
+	// ----------------------------------------------------------------------------------------------------------------
+	if (mouse.middleButtonPressed && !previousMouseMiddleButtonDownState)
+	{
+		middleClickX = mousePosNormalX;
+		middleClickY = mousePosNormalY;
+	}
+
+	double mouseMiddlePointXfactor = (middleClickX - mousePosNormalX + oldMouseMiddleFactorX);
+	double mouseMiddlePointYfactor = (middleClickY - mousePosNormalY + oldMouseMiddleFactorY);
+
+	// Rotation for the camera
+	if (mouse.middleButtonPressed)
+	{
+		previousMouseMiddleButtonDownState = true;
+
+		// X Axis
+		if (camera.theta > 360 || camera.theta < -360)
+		{
+			camera.theta = 0;
+		}
+		else
+		{
+			camera.theta = mouseMiddlePointXfactor * 180;
+		}
+
+
+		// Y Axis
+		if (camera.phi < 180)
+		{
+			camera.phi = mouseMiddlePointYfactor * 90;
+		}
+		else
+		{
+			camera.phi = 180;
+		}
+
+		if (camera.phi > 0)
+		{
+			camera.phi = mouseMiddlePointYfactor * 90;
+		}
+		else
+		{
+			camera.phi = 1;
+		}
+	}
+
+	// When middle click released
+	if (mouse.middleButtonReleased)
+	{
+		oldMouseMiddleFactorX = mouseMiddlePointXfactor;
+		oldMouseMiddleFactorY = mouseMiddlePointYfactor;
+		previousMouseMiddleButtonDownState = false;
+	}
+	// ----------------------------------------------------------------------------------------------------------------
+
+
+	// ================================================================================================================
+	// Translation
+	// ----------------------------------------------------------------------------------------------------------------
+	if (mouse.rightButtonPressed && !previousMouseRightButtonDownState)
+	{
+		rightClickX = mousePosNormalX;
+		rightClickY = mousePosNormalY;
+	}
+
+	double mouseRightPointXFactor = (rightClickX - mousePosNormalX + oldMouseRightFactorX);
+	double mouseRightPointYFactor = (rightClickY - mousePosNormalY + oldMouseRightFactorY);
+
+	if (mouse.rightButtonPressed)
+	{
+		previousMouseRightButtonDownState = true;
+
+		camera.position.x = (mouseRightPointXFactor * sin(camera.theta * RADPERDEG) 
+					      + mouseRightPointYFactor * cos(camera.theta * RADPERDEG)) * camTranslationSpeed;
+
+		camera.position.z = (mouseRightPointXFactor * cos(camera.theta * RADPERDEG + M_PI)
+						  + mouseRightPointYFactor * sin(camera.theta * RADPERDEG)) * camTranslationSpeed;
+	}
+
+	if (mouse.rightButtonReleased)
+	{
+		oldMouseRightFactorX = mouseRightPointXFactor;
+		oldMouseRightFactorY = mouseRightPointYFactor;
+		previousMouseRightButtonDownState = false;
+	}
+}
+
+
+/*
+ * Une fois par frame graphique (depend donc de la vitesse du PC et de l'affichage).
+ */
+void MainScene::update(double delta_t)
+{
 	/*
 	// Raycast
 	auto b = camera.raycastEnd;
@@ -218,12 +361,10 @@ void MainScene::update(double delta_t)
 		}
 	}
 	*/
-}
 
-/*
- * Une fois toutes les t millisecondes. Ne depend pas de la vitesse du PC.
- */
-void MainScene::fixedUpdate()
-{
+	// Gestion de la physique de la balle
+	physiqueBalle(delta_t);
 
+	// Gestion de la caméra
+	gestionCamera();
 }

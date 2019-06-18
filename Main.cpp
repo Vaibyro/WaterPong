@@ -40,7 +40,10 @@ bool initGL();
 void update(shared_ptr<Scene> scene, double delta_t);
 
 // Renders scene to the screen
-const void render(shared_ptr<Scene> scene, const Point& cam_pos);
+const void render(shared_ptr<Scene> scene);
+
+// Camera rotation
+void cameraRotation(const Vector3 &cam_pos, double phi, double theta, double rho);
 
 // Frees media and shuts down SDL
 void close(SDL_Window** window);
@@ -151,7 +154,7 @@ void update(shared_ptr<Scene> scene, double delta_t)
 	}
 }
 
-const void render(shared_ptr<Scene> scene, const Point& cam_pos)
+const void render(shared_ptr<Scene> scene)
 {
 	// Clear color buffer and Z-Buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -161,7 +164,7 @@ const void render(shared_ptr<Scene> scene, const Point& cam_pos)
 	glLoadIdentity();
 
 	// Set the camera position and parameters
-	gluLookAt(cam_pos.x, cam_pos.y, cam_pos.z, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	cameraRotation(scene->camera.position, scene->camera.phi * M_PI / 180, scene->camera.theta * M_PI / 180, scene->camera.rho);
 
 	// View matrix
 	double vm[16], pm[16];
@@ -198,6 +201,19 @@ void close(SDL_Window** window)
 	SDL_Quit();
 }
 
+void cameraRotation(const Vector3 &cam_pos, double phi, double theta, double rho)
+{
+
+
+	
+	gluLookAt(rho * sin(phi) * cos(theta) + cam_pos.x,
+		rho * cos(phi),
+		rho * sin(phi) * sin(theta) + cam_pos.z, //Position of camera
+		cam_pos.x, cam_pos.y, cam_pos.z, //Position where to look at
+		0.0, 1.0, 0.0); // Position of vectors
+		
+}
+
 
 /***************************************************************************/
 /* MAIN Function                                                           */
@@ -224,9 +240,6 @@ int main(int argc, char* args[])
 		// Event handler
 		SDL_Event event;
 
-		// Camera position
-		Point camera_position(10.0, 10.0, 10.0);
-
 		// Initialize the scene
 		shared_ptr<Scene> scene = make_shared<MainScene>();
 		scene->screen.width = SCREEN_WIDTH;
@@ -249,6 +262,36 @@ int main(int argc, char* args[])
 				{
 					// User requests quit
 
+				case SDL_MOUSEWHEEL:
+					if (event.wheel.y > 0) // scroll up
+					{
+						scene->mouse.wheel = 1;
+					}
+					else if (event.wheel.y < 0) // scroll down
+					{
+						scene->mouse.wheel = -1;
+					}
+					break;
+
+				case SDL_MOUSEMOTION:
+					if (event.motion.xrel > 0)
+					{
+						scene->mouse.motionX = 1;
+					}
+					if (event.motion.xrel < 0)
+					{
+						scene->mouse.motionX = -1;
+					}
+					if (event.motion.yrel > 0)
+					{
+						scene->mouse.motionY = 1;
+					}
+					if (event.motion.yrel < 0)
+					{
+						scene->mouse.motionY = -1;
+					}
+					break;
+
 				case SDL_MOUSEBUTTONDOWN:
 					//do whatever you want to do after a mouse button was pressed,
 					// e.g.:
@@ -257,6 +300,9 @@ int main(int argc, char* args[])
 					}
 					else if (event.button.button == SDL_BUTTON_RIGHT) {
 						scene->mouse.rightButtonPressed = true;
+					}
+					else if (event.button.button == SDL_BUTTON_MIDDLE) {
+						scene->mouse.middleButtonPressed = true;
 					}
 					break;
 
@@ -270,6 +316,10 @@ int main(int argc, char* args[])
 					else if (event.button.button == SDL_BUTTON_RIGHT) {
 						scene->mouse.rightButtonPressed = false;
 						scene->mouse.rightButtonReleased = true;
+					}
+					else if (event.button.button == SDL_BUTTON_MIDDLE) {
+						scene->mouse.middleButtonPressed = false;
+						scene->mouse.middleButtonReleased = true;
 					}
 					break;
 
@@ -338,9 +388,12 @@ int main(int argc, char* args[])
 			// Reset scene events
 			scene->mouse.rightButtonReleased = false;
 			scene->mouse.leftButtonReleased = false;
+			scene->mouse.middleButtonReleased = false;
+			scene->mouse.wheel = 0;
+
 
 			// Render the scene
-			render(scene, camera_position);
+			render(scene);
 
 			// Update window screen
 			SDL_GL_SwapWindow(gWindow);

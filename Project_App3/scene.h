@@ -12,8 +12,13 @@ public:
 	int posY;
 	bool rightButtonPressed;
 	bool leftButtonPressed;
+	bool middleButtonPressed;
 	bool rightButtonReleased;
 	bool leftButtonReleased;
+	bool middleButtonReleased;
+	int wheel;
+	int motionX;
+	int motionY;
 
 	Mouse() { posX = 0; posY = 0; rightButtonPressed = false; leftButtonPressed = false; rightButtonReleased = false; leftButtonReleased = false; };
 	Mouse(int x, int y) : Mouse() { posX = x; posY = y; };
@@ -33,6 +38,11 @@ public:
 	Matrix4 projectionMatrix;
 	Vector3 raycastStart;
 	Vector3 raycastEnd;
+	Vector3 position;
+	Vector3 lookAt;
+	double rho;
+	double phi;
+	double theta;
 };
 
 class Scene
@@ -44,7 +54,6 @@ public:
 
 	Scene();
 	virtual void setup();
-	virtual void fixedUpdate();
 	virtual void update(double delta_t);
 
 	const vector<shared_ptr<Component>>& getComponents() { return components; };
