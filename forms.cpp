@@ -146,13 +146,13 @@ void Plane::render()
 
 	glBegin(GL_QUADS);
 	{
-		glColor3f(1, 1, 0);
+		//glColor3f(1, 1, 0);
 		glVertex3d(p1.x, p1.y, p1.z);
-		glColor3f(0, 1, 1);
+		//glColor3f(0, 1, 1);
 		glVertex3d(p2.x, p2.y, p2.z);
-		glColor3f(1, 0, 1);
+		//glColor3f(1, 0, 1);
 		glVertex3d(p3.x, p3.y, p3.z);
-		glColor3f(0, 1, 0);
+		//glColor3f(0, 1, 0);
 		glVertex3d(p4.x, p4.y, p4.z);
 	}
 	glEnd();
@@ -261,9 +261,9 @@ void Verre::render()
 	// liquide
 	Liquide liquide = Liquide(height - 0.2, rayBottom - 0.05, rayTop - 0.05, colorLiquide);
 	// Liquide(double hei, double rayB, double rayT, Color co)
-	auto animLiquide = make_shared<Animation>(anim->getPosition().x * 0.15,
-		anim->getPosition().y * 0.15,
-		anim->getPosition().z * 0.15);
+	auto animLiquide = make_shared<Animation>(anim->getPosition().x,
+		anim->getPosition().y,
+		anim->getPosition().z);
 	liquide.setAnim(animLiquide);
 	liquide.render();
 
@@ -273,9 +273,9 @@ void Verre::render()
 	// gobelet
 	Gobelet gobelet = Gobelet(height, rayBottom, rayTop, colorGobelet);
 	// Gobelet(double hei, double rayB, double rayT, Color co)
-	auto animGobelet = make_shared<Animation>(anim->getPosition().x * 0.15,
-		anim->getPosition().y * 0.15,
-		anim->getPosition().z * 0.15);
+	auto animGobelet = make_shared<Animation>(anim->getPosition().x,
+		anim->getPosition().y,
+		anim->getPosition().z);
 	gobelet.setAnim(animGobelet);
 	gobelet.render();
 
@@ -311,7 +311,7 @@ void Liquide::render()
 	// set possition
 	glTranslated(anim->getPosition().x, anim->getPosition().y, anim->getPosition().z);
 	glRotated(90, -1, 0, 0);
-	glScaled(0.15, 0.15, 0.15);
+	//glScaled(0.15, 0.15, 0.15);
 	glColor3f(col.r, col.g, col.b);
 
 	gluQuadricDrawStyle(params, GLU_FILL);
@@ -352,7 +352,7 @@ void Gobelet::render()
 	// set possition
 	glTranslated(anim->getPosition().x, anim->getPosition().y, anim->getPosition().z);
 	glRotated(90, -1, 0, 0);
-	glScaled(0.15, 0.15, 0.15);
+	//glScaled(0.15, 0.15, 0.15);
 	glColor3f(col.r, col.g, col.b);
 
 	gluQuadricDrawStyle(params, GLU_LINE);
@@ -543,10 +543,10 @@ void Personnage::render()
 
 	// tete
 	// Sphere(double r, Color cl)
-	Sphere tete = Sphere(rayonTete * 0.15, couleurPeau);
-	auto animTete = make_shared<Animation>((anim->getPosition().x + rayonTete) * 0.15,
-		(anim->getPosition().y + hauteurJambe + hauteurBassin + hauteurTronc + rayonTete) * 0.15,
-		(anim->getPosition().z + (largeurTronc/2)) * 0.15);
+	Sphere tete = Sphere(rayonTete, couleurPeau);
+	auto animTete = make_shared<Animation>((anim->getPosition().x + rayonTete),
+		(anim->getPosition().y + hauteurJambe + hauteurBassin + hauteurTronc + rayonTete),
+		(anim->getPosition().z + (largeurTronc/2)));
 	tete.setAnim(animTete);
 	tete.render();
 
@@ -577,7 +577,7 @@ void Parallelepipede::update(double delta_t)
 
 void Parallelepipede::render()
 {
-	glScaled(0.15, 0.15, 0.15);
+	//glScaled(0.15, 0.15, 0.15);
 
 	glEnable(GL_DEPTH_TEST);
 

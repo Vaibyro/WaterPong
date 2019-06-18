@@ -64,4 +64,5 @@ public:
 	// Quick methods
 	shared_ptr<SphereCollider> addSphereCollider(double r, const Vector3& pos);
 	shared_ptr<PlaneCollider> addPlaneCollider(double l, double w, const Vector3& pos);
+	shared_ptr<BoxCollider> addBoxCollider(double h, double l, double w, const Vector3& pos);
 };

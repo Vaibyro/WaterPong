@@ -16,18 +16,14 @@ void MainScene::setup()
 
 	auto axis = createComponent(shared_ptr<Form>(new Axis()), Vector3(0, 0, 0));
 
-	
-	//Table(double hei, double len, double wi);
-
+	// ============= Balle
 	radius = 0.5;
 	balleSouris = createComponent(shared_ptr<Form>(new Sphere(radius, RED)), Vector3(1, 10, 0));
 	balleSouris->addSphereCollider(radius, Vector3(0, 0, 0));
 
-
-
-	auto planeform = shared_ptr<Plane>(new Plane(15.0, 15.0));
+	auto planeform = shared_ptr<Plane>(new Plane(15.0, 15.0, FLOOR));
 	auto plane = createComponent(planeform, Vector3(0, niveauSol, 0));
-	coll = plane->addPlaneCollider(3.0, 3.0, Vector3(0, 0, 0));
+	collPlane = plane->addPlaneCollider(3.0, 3.0, Vector3(0, 0, 0));
 
 	ray = createComponent(shared_ptr<Form>(new Arrow(Vector3(0, 0, 0), RED)));
 	rayThrow = createComponent(shared_ptr<Form>(new Ray(Vector3(0, 0, 0), Vector3(0, 0, 0), RED)));
@@ -38,11 +34,13 @@ void MainScene::setup()
 
 	d = 5.0;
 
-	// Décor
+	// ============= Décor
+	double coefficientReduc = 1;
 
-	
 	// Table
 	table = createComponent(shared_ptr<Form>(new Table(2, 30, 15)), Vector3(-30, -2, -7.5));
+	collTable = table->addBoxCollider(10.0 * coefficientReduc, 30.0 * coefficientReduc, 15.0 * coefficientReduc, Vector3(0, 0, 0));
+
 	// Verres
 	double heightGlass = 3;
 	double rayBottomGlass = 1;
@@ -84,11 +82,15 @@ void MainScene::setup()
 void MainScene::update(double delta_t)
 {
 	// Detect collision ball / plane
-	bool collision = false;
+	bool collisionSol = false;
+	bool collisionTable = false;
 	for (auto& collider : balleTest->getColliders())
 	{
-		collision = collider->collision(coll);
+		collisionSol = collider->collision(collPlane);
+		collisionTable = collider->collision(collTable);
 	}
+
+	cout << collisionTable << endl;
 
 	// ray casting
 
@@ -98,7 +100,7 @@ void MainScene::update(double delta_t)
 	double speed_x, speed_y, speed_z;
 
 
-	if (!lastCollision && collision)
+	if (!lastCollision && collisionSol)
 	{
 		speed_x = balleTest->getAnimation()->getSpeed().x * coeff;
 		speed_y = balleTest->getAnimation()->getSpeed().y * -coeff;
@@ -153,7 +155,7 @@ void MainScene::update(double delta_t)
 		double distance = mouseArrival.distance(mouseDeparture);
 		double spd = distance / secs;
 
-		cout << distance << "from " << mouseDeparture << " to " << mouseArrival << endl;
+		//cout << distance << "from " << mouseDeparture << " to " << mouseArrival << endl;
 
 
 		// Throw ball by mouse
