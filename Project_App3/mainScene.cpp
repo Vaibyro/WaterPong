@@ -96,7 +96,7 @@ void MainScene::update(double delta_t)
 
 	// ray casting
 
-	double coeff = 0.92;
+	double coeff = 0.40;
 
 	// Calculate speeds
 	double speed_x, speed_y, speed_z;
