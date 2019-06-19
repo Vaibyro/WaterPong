@@ -16,7 +16,7 @@ void MainScene::setup()
 {
 
 	// Initialize cam
-	camera.position = Vector3(0, 0, 0);
+	camera.target = Vector3(0, 0, 0);
 	camera.phi = 90.0;
 	camera.theta = 45.0;
 	camera.rho = 4.0;
@@ -83,8 +83,7 @@ void MainScene::setup()
 	// personnages
 	personnage1 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-3, -0.7, 0.3));
 	personnage2 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-3, -0.7, -0.8));
-	
-	//auto spherex = createComponent(shared_ptr<Form>(new Sphere(0.5, BLUE)), Vector3(-1, 0, 0));
+
 
 	lastCollisionSol = false;
 	lastCollisionTable = false;
@@ -106,154 +105,162 @@ void MainScene::setup()
 
 	camTranslationSpeed = 5.0;
 
+	// L'initialisation de la scène est terminé.
 	cout << "Main scene setup finished" << endl;
 }
 
 
 void MainScene::physiqueBalle(double delta_t)
 {
-	Vector3 axis;
+	// TODO: variables a déplacer !
+	double coeff = 0.70;
 
-	// Detect collision ball / plane
+
+	Vector3 axisCollisionTable;
+
+	// --------------------------------------------------------------------------------------------------------------------
+	// On effectue une vérification des collisions entre la balle et ses colliders.
+	// Deux colliders sont à vérifier : le sol pour que la balle ne retombe pas plus bas que ce dernier et
+	// la table pour que la balle rebomdisse dessus.
+	// TODO: colliders verres.
 	bool collisionSol = false;
 	bool collisionTable = false;
 	for (auto& collider : balle->getColliders())
 	{
 		collisionSol = collider->collision(collPlane);
-		collisionTable = collider->collision(collTable, axis);
+		collisionTable = collider->collision(collTable, axisCollisionTable);
+	}
+	// --------------------------------------------------------------------------------------------------------------------
+
+	// On retient le dernier axe de collision entre la balle et la table (X, Y ou Z).
+	if ((axisCollisionTable != Vector3::zero())) {
+		lastPointCollisionTable = axisCollisionTable;
 	}
 
-	if ((axis != Vector3::zero())) {
-		lastPointCollisionTable = axis;
-	}
+	// --------------------------------------------------------------------------------------------------------------------
+	// On cherche à calculer maintenant les nouvelles composantes vitesses de la balle à l'instant T présent
+	double speed_x = balle->getAnimation()->getSpeed().x;
+	double speed_y = balle->getAnimation()->getSpeed().y;
+	double speed_z = balle->getAnimation()->getSpeed().z;
 
-	double coeff = 0.70;
-
-	// Calculate speeds
-	double speed_x, speed_y, speed_z;
-
-
-	if (!lastCollisionSol && collisionSol)
+	if (!lastCollisionSol && collisionSol) // Si une collision vient d'être detectée avec le sol
 	{
-		speed_x = balle->getAnimation()->getSpeed().x * coeff;
-		speed_y = balle->getAnimation()->getSpeed().y * -coeff;
-		speed_z = balle->getAnimation()->getSpeed().z * coeff;
+		// On applique le coefficient de rebond
+		speed_x *= coeff;
+		speed_y *= coeff * -1.0; // Cette collision inverse uniquement la composante vitesse Y pour un rebondi vertical.
+		speed_z *= coeff;
 		lastCollisionSol = true;
 
-		// Sécurité
+		// Sécurité pour pas que la balle parte dans le sol...
 		balle->setY(niveauSol + radSphere);
 	}
-	else if (!lastCollisionTable && collisionTable)
+	else if (!lastCollisionTable && collisionTable) // Si une collision vient d'être detectée avec la table (sur n'importe quel côté)
 	{
+		// On applique le coefficient de rebond
+		speed_x *= coeff;
+		speed_y *= coeff;
+		speed_z *= coeff;
 
-		// Rebonds cotes
-		if (abs(lastPointCollisionTable.x) == 1.0)
+		// Lorsqu'il y a un rebond sur un des côtés de la table, on inverse la composante vitesse adéquate :
+		if (abs(lastPointCollisionTable.x) == 1.0) // Rebond sur une face de l'axe X
 		{
-			speed_x = balle->getAnimation()->getSpeed().x * coeff * -1.0;
+			speed_x = -speed_x;
 		}
-		else
+		
+		if (abs(lastPointCollisionTable.y) == 1.0) // Rebond sur une face de l'axe Y (haut ou bas)
 		{
-			speed_x = balle->getAnimation()->getSpeed().x * coeff;
+			speed_y = -speed_y;
 		}
-
-		if (abs(lastPointCollisionTable.y) == 1.0)
+		
+		if (abs(lastPointCollisionTable.z) == 1.0) // Rebond sur une face de l'axe Z
 		{
-			speed_y = balle->getAnimation()->getSpeed().y * coeff * -1.0;
-		}
-		else
-		{
-			speed_y = balle->getAnimation()->getSpeed().y * coeff;
-		}
-
-		if (abs(lastPointCollisionTable.z) == 1.0)
-		{
-			speed_z = balle->getAnimation()->getSpeed().z * coeff * -1.0;
-		}
-		else
-		{
-			speed_z = balle->getAnimation()->getSpeed().z * coeff;
+			speed_z = -speed_z;
 		}
 
 		lastCollisionTable = true;
 
-		// Sécurité
+		// Sécurité pour pas que la balle ne parte dans la table...
 		if (lastPointCollisionTable.y == 1.0)
 		{
 			balle->setY(niveauTable + radSphere);
 		}
+
+		// TODO: vérifier s'il faut d'autres sécurités pour les côtés de la table
 	}
 	else
 	{
-		speed_x = balle->getAnimation()->getSpeed().x;
-		speed_y = balle->getAnimation()->getSpeed().y - (GRAVITY * delta_t); // TODO delta_t^2 bizarre
-		speed_z = balle->getAnimation()->getSpeed().z;
+		// Si pas de collisions, on applique la force de gravité.
+		speed_y -= (GRAVITY * delta_t);
 
-		//cout << abs(speed_y) << endl;
+		// On indique qu'il n'y a pas eu de collision sur cette frame.
 		lastCollisionSol = false;
 		lastCollisionTable = false;
 	}
 
+	// On applique la vitesse calculées à l'instant T à la balle.
 	balle->getAnimation()->setSpeed(speed_x, speed_y, speed_z);
 
-	// Assign pos
+	// Trois variables qui vont contenir les positions futures de la balle.
 	double x, y, z;
 
+	// --------------------------------------------------------------------------------------------------------------------
+	// Si le click gauche de la souris est enfoncé, on passe en mode lancer.
 	if (mouse.leftButtonPressed) {
-
-		x = (2.0 * mouse.posX) / screen.width * 2.0 - 2.0;
-		y = 1.5 - (2.0 * mouse.posY) / screen.width * 1.5;
-		z = 0.0f;
+		// On arrete la balle car la souris la gere en lui appliquant une vitesse nulle (reset vitesse).
 		balle->getAnimation()->setSpeed(0, 0, 0);
 
-		if (!mousePressedLastState) {
-			previous_time = SDL_GetTicks();
-			mouseDeparture = Vector3(x, y, z);
-		}
+		// Coordonnees souris normalisees
+		double mousePosNormalX = (2.0 * mouse.posX) / screen.width - 1.0;
+		double mousePosNormalY = (2.0 * mouse.posY) / screen.height - 1.0;
 
-		mousePressedLastState = true;
+		// Position de la balle au centre de la camera
+		Vector3 init = camera.position - 2 * (camera.position - camera.target).normalize();
+
+		// On peut bouger la balle avec la souris verticalement
+		x = init.x + (0 * sin(camera.theta * RADPERDEG) // Enlever les variables * 0
+			+ mousePosNormalY * cos(camera.theta * RADPERDEG)) * 2;
+		y = init.y - mousePosNormalY * 0.8;
+		z = init.z + (0 * cos(camera.theta * RADPERDEG + M_PI)
+			+ mousePosNormalY * sin(camera.theta * RADPERDEG)) * 2;
 	}
 	else
 	{
+		// Si le click gauche n'est pas enfoncé, on n'est pas en mode lancer et on laisse la physique se débrouiller pour positionner la balle
 		x = balle->getAnimation()->getPosition().x + balle->getAnimation()->getSpeed().x * delta_t;
-		y = balle->getAnimation()->getPosition().y + balle->getAnimation()->getSpeed().y * delta_t - GRAVITY * (delta_t * delta_t) / 2.0;
+		y = balle->getAnimation()->getPosition().y + balle->getAnimation()->getSpeed().y * delta_t - GRAVITY * (delta_t * delta_t) / 2.0; // Gravité
 		z = balle->getAnimation()->getPosition().z + balle->getAnimation()->getSpeed().z * delta_t;
 	}
 
+	// Front montant souris : se produit lors du changement d'état du click gauche.
+	if (!mousePressedLastState && mouse.leftButtonPressed)
+	{
+		// On enregistre le point de départ du tir
+		mouseDeparture = Vector3(x, y, z);
+		mousePressedLastState = true;
+	}
+	
+	// --------------------------------------------------------------------------------------------------------------------
+	// Toutes les forces et déplacements ont été calculés : on les applique à la balle.
 	balle->getAnimation()->setPosition(x, y, z);
+	// --------------------------------------------------------------------------------------------------------------------
 
-
+	// --------------------------------------------------------------------------------------------------------------------
+	// Pour la frame d'après, on calcule le lancer eventuel lorsque le bouton de la souris est relevé.
 	if (mouse.leftButtonReleased)
 	{
 		mousePressedLastState = false;
-		current_time = SDL_GetTicks();
-		double time = current_time - previous_time;
-		double secs = time / 1000.0;
-		double distance = mouseArrival.distance(mouseDeparture);
-		double spd = distance / secs;
 
-		//cout << distance << "from " << mouseDeparture << " to " << mouseArrival << endl;
-
-
-		// Throw ball by mouse
-
-
+		// Point d'arrivée du lancer.
 		mouseArrival = balle->getAnimation()->getPosition();
 
-
 		//ray->setForm(shared_ptr<Form>(new Ray(mouseDeparture, mouseArrival)));
-		ray->setForm(shared_ptr<Form>(new Arrow((mouseArrival - mouseDeparture).normalize())));
-		rayThrow->setForm(shared_ptr<Form>(new Ray(mouseArrival, mouseDeparture)));
-
-		Vector3 throwingSpeed = distance * 5.0 * (mouseArrival - mouseDeparture).normalize();
+		//ray->setForm(shared_ptr<Form>(new Arrow((mouseArrival - mouseDeparture).normalize())));
+		
+		// On enregistre la vitesse en fonction du lancer
+		Vector3 throwingSpeed = (mouseArrival - mouseDeparture);
 		balle->getAnimation()->setSpeed(throwingSpeed);
 	}
-
-	// Garde fou
-	if (balle->getY() - radSphere <= niveauSol)
-	{
-		//balle->setY(niveauSol + radSphere);
-	}
-
+	// --------------------------------------------------------------------------------------------------------------------
 }
 
 
@@ -359,10 +366,10 @@ void MainScene::gestionCamera()
 	{
 		previousMouseRightButtonDownState = true;
 
-		camera.position.x = (mouseRightPointXFactor * sin(camera.theta * RADPERDEG) 
+		camera.target.x = (mouseRightPointXFactor * sin(camera.theta * RADPERDEG) 
 					      + mouseRightPointYFactor * cos(camera.theta * RADPERDEG)) * camTranslationSpeed;
 
-		camera.position.z = (mouseRightPointXFactor * cos(camera.theta * RADPERDEG + M_PI)
+		camera.target.z = (mouseRightPointXFactor * cos(camera.theta * RADPERDEG + M_PI)
 						  + mouseRightPointYFactor * sin(camera.theta * RADPERDEG)) * camTranslationSpeed;
 	}
 
@@ -380,44 +387,6 @@ void MainScene::gestionCamera()
  */
 void MainScene::update(double delta_t)
 {
-	/*
-	// Raycast
-	auto b = camera.raycastEnd;
-	auto a = camera.raycastStart;
-	auto c = balleSouris->getAnimation()->getPosition();
-
-	Vector3 a1 = b - a;
-	Vector3 a2 = c - a;
-	Vector3 bv = c - b;
-
-	if (!mouse.leftButtonPressed) {
-		if (a2 * a1 <= 0.0)           // Point is lagging behind start of the segment, so perpendicular distance is not viable.
-			d = a2.norm();         // Use distance to start of segment instead.
-		else if (bv * a1 >= 0.0)           // Point is advanced past the end of the segment, so perpendicular distance is not viable.
-			d = bv.norm();         // Use distance to end of the segment instead.
-		else
-			d = (a1 ^ a2).norm() / a1.norm();       // Perpendicular distance of point to segment.
-	}
-
-	cout << "new d =" << d << endl;
-
-	Vector3 newPos((b.x - a.x) / 3.0, (b.y - a.y) / 3.0, (b.z - a.z) / 3.0);
-
-	Vector3 Q = a + d * a1;
-	ray->setForm(shared_ptr<Form>(new Ray(Q, c)));
-	//balleTest->getAnimation()->setPosition(a1);
-
-	//cout << (a + d * a1) << endl;
-	if (d < radius) {
-		cout << "la souris est sur la balle" << endl;
-		if (mouse.leftButtonPressed)
-		{
-			cout << "la souris est cliquee sur la balle" << endl;
-			balleSouris->getAnimation()->setPosition(Q);
-		}
-	}
-	*/
-
 	// Gestion de la physique de la balle
 	physiqueBalle(delta_t);
 

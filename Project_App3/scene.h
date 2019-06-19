@@ -38,8 +38,8 @@ public:
 	Matrix4 projectionMatrix;
 	Vector3 raycastStart;
 	Vector3 raycastEnd;
+	Vector3 target;
 	Vector3 position;
-	Vector3 lookAt;
 	double rho;
 	double phi;
 	double theta;
