@@ -18,6 +18,16 @@ private:
 	shared_ptr<Component> balleSouris;
 	shared_ptr<PlaneCollider> collPlane;
 	shared_ptr<BoxCollider> collTable;
+	shared_ptr<BoxCollider> collVerre1;
+	shared_ptr<BoxCollider> collVerre2;
+	shared_ptr<BoxCollider> collVerre3;
+	shared_ptr<BoxCollider> collVerre4;
+	shared_ptr<BoxCollider> collVerre5;
+	shared_ptr<BoxCollider> collVerre6;
+	shared_ptr<BoxCollider> collVerre7;
+	shared_ptr<BoxCollider> collVerre8;
+	shared_ptr<BoxCollider> collVerre9;
+	shared_ptr<BoxCollider> collVerre10;
 	shared_ptr<Component> ray;
 	shared_ptr<Component> rayThrow;
 	//shared_ptr<Component> point;
@@ -44,7 +54,7 @@ private:
 
 	double d;
 
-	double radSphere = 0.03;
+	double radSphere = 0.02;
 	double niveauSol = -0.7;
 	double niveauTable = 0.0;
 	bool lastCollisionSol;
