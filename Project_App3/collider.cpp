@@ -39,12 +39,12 @@ bool SphereCollider::collision(const shared_ptr<BoxCollider>& collider)
 		&& sphereOrg.z >= boxOrg.z
 		&& sphereOrg.z < boxOrg.z + collider->getWidth())
 	{
-		//cout << "rebond table" << endl;
+		cout << "verre" << endl;
 		return true;
 	}
 	else
 	{
-		//cout << "hors table" << endl;
+		cout << "pas verre" << endl;
 		return false;
 	}
 }
