@@ -45,8 +45,10 @@ private:
 	double d;
 
 	double radSphere = 0.03;
-	double niveauSol = -10.0 * 0.15;
-	bool lastCollision;
+	double niveauSol = -0.7;
+	double niveauTable = 0.0;
+	bool lastCollisionSol;
+	bool lastCollisionTable;
 	bool mousePressedLastState;
 
 	// ===================================================================================================
@@ -74,5 +76,5 @@ private:
 	Vector3 mouseDeparture;
 	Vector3 mouseArrival;
 
-	
+	Vector3 lastPointCollisionTable;
 };

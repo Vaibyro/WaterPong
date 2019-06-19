@@ -1,3 +1,5 @@
+#include <cmath>
+#include <algorithm>
 #include "collider.h"
 
 
@@ -25,22 +27,19 @@ bool SphereCollider::collision(const shared_ptr<SphereCollider>& collider)
 	return d2 < (radius + collider->radius) * (radius + collider->radius);
 }
 
-bool SphereCollider::collision(const shared_ptr<BoxCollider>& collider)
+bool SphereCollider::collision(const shared_ptr<BoxCollider>& collider, Vector3& nearPoint)
 {
 	Vector3 sphereOrg = linkedAnimation->getPosition();
 	Vector3 boxOrg = collider->getAnimation()->getPosition();
 
-	cout << boxOrg << endl;
+	// get box closest point to sphere center by clamping
+	double x = max(boxOrg.x, min(sphereOrg.x, boxOrg.x + collider->getLength()));
+	double y = max(boxOrg.y, min(sphereOrg.y, boxOrg.y + collider->getHeight()));
+	double z = max(boxOrg.z, min(sphereOrg.z, boxOrg.z + collider->getWidth()));
 
-	if (sphereOrg.x >= boxOrg.x
-		&& sphereOrg.x < boxOrg.x + collider->getLength()
-		&& sphereOrg.y >= boxOrg.y
-		&& sphereOrg.y < boxOrg.y + collider->getHeight()
-		&& sphereOrg.z >= boxOrg.z
-		&& sphereOrg.z < boxOrg.z + collider->getWidth())
-		return true;
-	else
-		return false;
+	nearPoint = Vector3(x, y, z);
+	double distance = nearPoint.distance(sphereOrg);
+	return distance < radius;
 }
 
 bool SphereCollider::collision(const shared_ptr<PlaneCollider>& collider)
