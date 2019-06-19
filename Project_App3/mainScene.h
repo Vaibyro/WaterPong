@@ -76,5 +76,5 @@ private:
 	Vector3 mouseDeparture;
 	Vector3 mouseArrival;
 
-	
+	Vector3 lastPointCollisionTable;
 };

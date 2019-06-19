@@ -28,7 +28,7 @@ public:
 	virtual bool collision(double x, double y, double z) = 0;
 	virtual bool collision(const shared_ptr<SphereCollider>& collider) = 0;
 	virtual bool collision(const shared_ptr<PlaneCollider>& collider) = 0;
-	virtual bool collision(const shared_ptr<BoxCollider>& collider) = 0;
+	virtual bool collision(const shared_ptr<BoxCollider>& collider, Vector3& nearPoint) = 0;
 
 	static Vector3 closestPoint(const Vector3& a, const Vector3& b, const Vector3& point);
 };
@@ -44,7 +44,7 @@ public:
 	bool collision(double x, double y, double z);
 	bool collision(const shared_ptr<SphereCollider>& collider);
 	bool collision(const shared_ptr<PlaneCollider>& collider);
-	bool collision(const shared_ptr<BoxCollider>& collider);
+	bool collision(const shared_ptr<BoxCollider>& collider, Vector3& nearPoint);
 };
 
 class PlaneCollider : public Collider
@@ -61,7 +61,7 @@ public:
 	bool collision(double x, double y, double z) { return true; }; // todo
 	bool collision(const shared_ptr<SphereCollider>& collider) { return true; }; // todo
 	bool collision(const shared_ptr<PlaneCollider>& collider) { return true; }; // todo
-	bool collision(const shared_ptr<BoxCollider>& collider) { return true; }; // todo
+	bool collision(const shared_ptr<BoxCollider>& collider, Vector3& nearPoint) { return true; }; // todo
 };
 
 class BoxCollider : public Collider
@@ -82,5 +82,5 @@ public:
 	bool collision(double x, double y, double z) { return true; }; // todo
 	bool collision(const shared_ptr<SphereCollider>& collider) { return true; }; // todo
 	bool collision(const shared_ptr<PlaneCollider>& collider) { return true; }; // todo
-	bool collision(const shared_ptr<BoxCollider>& collider) { return true; }; // todo
+	bool collision(const shared_ptr<BoxCollider>& collider, Vector3& nearPoint) { return true; }; // todo
 };
