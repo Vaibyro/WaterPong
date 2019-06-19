@@ -30,7 +30,7 @@ bool SphereCollider::collision(const shared_ptr<BoxCollider>& collider)
 	Vector3 sphereOrg = linkedAnimation->getPosition();
 	Vector3 boxOrg = collider->getAnimation()->getPosition();
 
-	cout << boxOrg << endl;
+	//cout << boxOrg << endl;
 
 	if (sphereOrg.x >= boxOrg.x
 		&& sphereOrg.x < boxOrg.x + collider->getLength()
@@ -38,9 +38,15 @@ bool SphereCollider::collision(const shared_ptr<BoxCollider>& collider)
 		&& sphereOrg.y < boxOrg.y + collider->getHeight()
 		&& sphereOrg.z >= boxOrg.z
 		&& sphereOrg.z < boxOrg.z + collider->getWidth())
+	{
+		//cout << "rebond table" << endl;
 		return true;
+	}
 	else
+	{
+		//cout << "hors table" << endl;
 		return false;
+	}
 }
 
 bool SphereCollider::collision(const shared_ptr<PlaneCollider>& collider)
