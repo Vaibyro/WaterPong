@@ -58,6 +58,8 @@ void MainScene::setup()
 	// Verre(double hei, double rayB, double rayT, Color coGob, Color coLiq)
 	verre1 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.4 + decalageTable, 0, -0.3 + decalageTable + rayTopGlass));
 	collVerre1 = verre1->addBoxCollider(0.2, 0.1, 0.1, Vector3(0, 0, 0));
+	
+	/*
 	verre2 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.4 + decalageTable, 0, -0.2 + decalageTable + rayTopGlass));
 	collVerre2 = verre2->addBoxCollider(0.2, 0.1, 0.1, Vector3(0, 0, 0));
 	verre3 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.4 + decalageTable, 0, -0.1 + decalageTable + rayTopGlass));
@@ -79,6 +81,7 @@ void MainScene::setup()
 
 	verre10 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.1 + decalageTable, 0, -0.15 + decalageTable + rayTopGlass));
 	collVerre10 = verre10->addBoxCollider(0.2, 0.1, 0.1, Vector3(0, 0, 0));
+	*/
 
 	// personnages
 	personnage1 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-3, -0.7, 0.3));
@@ -118,6 +121,8 @@ void MainScene::physiqueBalle(double delta_t)
 
 	Vector3 axisCollisionTable;
 
+	Vector3 axisCollisionVerre1;
+
 	// --------------------------------------------------------------------------------------------------------------------
 	// On effectue une vérification des collisions entre la balle et ses colliders.
 	// Deux colliders sont à vérifier : le sol pour que la balle ne retombe pas plus bas que ce dernier et
@@ -125,16 +130,26 @@ void MainScene::physiqueBalle(double delta_t)
 	// TODO: colliders verres.
 	bool collisionSol = false;
 	bool collisionTable = false;
+
+	bool collisionVerre1 = false;
+
 	for (auto& collider : balle->getColliders())
 	{
 		collisionSol = collider->collision(collPlane);
 		collisionTable = collider->collision(collTable, axisCollisionTable);
+
+		// Verres
+		collisionVerre1 = collider->collision(collVerre1, axisCollisionVerre1);
 	}
 	// --------------------------------------------------------------------------------------------------------------------
 
 	// On retient le dernier axe de collision entre la balle et la table (X, Y ou Z).
 	if ((axisCollisionTable != Vector3::zero())) {
 		lastPointCollisionTable = axisCollisionTable;
+	}
+
+	if (collisionVerre1) {
+		removeComponent(verre1);
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------

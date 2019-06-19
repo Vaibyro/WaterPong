@@ -61,6 +61,8 @@ public:
 	shared_ptr<Component> createComponent(const shared_ptr<Form>& form, const Vector3& pos);
 	shared_ptr<Component> createComponent(const shared_ptr<Form>& form);
 
+	void removeComponent(const shared_ptr<Component>& pointerToComponent);
+
 	size_t componentsCount() { return components.size(); };
 
 
