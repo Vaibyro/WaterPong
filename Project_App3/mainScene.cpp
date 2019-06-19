@@ -112,17 +112,20 @@ void MainScene::setup()
 
 void MainScene::physiqueBalle(double delta_t)
 {
+	Vector3 axis;
+
 	// Detect collision ball / plane
 	bool collisionSol = false;
 	bool collisionTable = false;
 	for (auto& collider : balle->getColliders())
 	{
 		collisionSol = collider->collision(collPlane);
-		collisionTable = collider->collision(collTable, lastPointCollisionTable);
+		collisionTable = collider->collision(collTable, axis);
 	}
 
-
-	// ray casting
+	if ((axis != Vector3::zero())) {
+		lastPointCollisionTable = axis;
+	}
 
 	double coeff = 0.70;
 
@@ -142,10 +145,9 @@ void MainScene::physiqueBalle(double delta_t)
 	}
 	else if (!lastCollisionTable && collisionTable)
 	{
-		Vector3 axis = (balle->getAnimation()->getPosition() - lastPointCollisionTable).normalize();
 
 		// Rebonds cotes
-		if (abs(axis.x) == 1.0)
+		if (abs(lastPointCollisionTable.x) == 1.0)
 		{
 			speed_x = balle->getAnimation()->getSpeed().x * coeff * -1.0;
 		}
@@ -154,7 +156,7 @@ void MainScene::physiqueBalle(double delta_t)
 			speed_x = balle->getAnimation()->getSpeed().x * coeff;
 		}
 
-		if (abs(axis.y) == 1.0)
+		if (abs(lastPointCollisionTable.y) == 1.0)
 		{
 			speed_y = balle->getAnimation()->getSpeed().y * coeff * -1.0;
 		}
@@ -163,7 +165,7 @@ void MainScene::physiqueBalle(double delta_t)
 			speed_y = balle->getAnimation()->getSpeed().y * coeff;
 		}
 
-		if (abs(axis.z) == 1.0)
+		if (abs(lastPointCollisionTable.z) == 1.0)
 		{
 			speed_z = balle->getAnimation()->getSpeed().z * coeff * -1.0;
 		}
@@ -175,7 +177,7 @@ void MainScene::physiqueBalle(double delta_t)
 		lastCollisionTable = true;
 
 		// Sécurité
-		if (axis.y == 1.0)
+		if (lastPointCollisionTable.y == 1.0)
 		{
 			balle->setY(niveauTable + radSphere);
 		}

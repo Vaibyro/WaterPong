@@ -39,6 +39,16 @@ bool SphereCollider::collision(const shared_ptr<BoxCollider>& collider, Vector3&
 
 	nearPoint = Vector3(x, y, z);
 	double distance = nearPoint.distance(sphereOrg);
+
+	if (distance > 0.0) {
+		nearPoint = (sphereOrg - nearPoint).normalize();
+	}
+	else
+	{
+		nearPoint = Vector3(0.0, 0.0, 0.0);
+	}
+	
+
 	return distance < radius;
 }
 
