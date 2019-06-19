@@ -54,7 +54,7 @@ private:
 
 	double d;
 
-	double radSphere = 0.03;
+	double radSphere = 0.02;
 	double niveauSol = -0.7;
 	double niveauTable = 0.0;
 	bool lastCollisionSol;
