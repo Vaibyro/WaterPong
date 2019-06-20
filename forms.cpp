@@ -44,11 +44,17 @@ void Sphere::update(double delta_t)
 
 void Sphere::render()
 {
+	glShadeModel(GL_FLAT);
     GLUquadric *quad;
     quad = gluNewQuadric();
-	Form::render();
+	glTranslated(anim->getPosition().x, anim->getPosition().y, anim->getPosition().z);
+	glColor3f(col.r, col.g, col.b);
+	gluQuadricDrawStyle(quad, GLU_FILL);
+
 	gluSphere(quad, radius, 30, 20);
-    gluDeleteQuadric(quad);
+    
+	gluDeleteQuadric(quad);
+
 }
 
 
