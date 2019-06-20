@@ -333,14 +333,23 @@ int main(int argc, char* args[])
 
 					switch (key_pressed)
 					{
-						// Quit the program when 'q' or Escape keys are pressed
-					case SDLK_q:
-					case SDLK_ESCAPE:
-						quit = true;
-						break;
 
-					default:
-						break;
+						// Reset the view when 'r' is pressed
+						case SDLK_r:
+							scene->camera.position = Vector3(0, 0, 0);
+							scene->camera.phi = 90.0;
+							scene->camera.theta = 45.0;
+							scene->camera.rho = 4.0;
+							break;
+
+							// Quit the program when 'q' or Escape keys are pressed
+						case SDLK_q:
+						case SDLK_ESCAPE:
+							quit = true;
+							break;
+
+						default:
+							break;
 					}
 					break;
 				default:

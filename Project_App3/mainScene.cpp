@@ -298,7 +298,7 @@ void MainScene::gestionCamera()
 	// ================================================================================================================
 	// ZOOM
 	// ----------------------------------------------------------------------------------------------------------------
-	if (mouse.wheel == 1 && camera.rho > 0.5f)
+	if (mouse.wheel == 1 && camera.rho > 3.5f)
 	{
 		camera.rho -= 0.5f;
 	}
@@ -328,31 +328,18 @@ void MainScene::gestionCamera()
 		previousMouseMiddleButtonDownState = true;
 
 		// X Axis
-		if (camera.theta > 360 || camera.theta < -360)
-		{
-			camera.theta = 0;
-		}
-		else
-		{
-			camera.theta = mouseMiddlePointXfactor * 180;
-		}
 
+			camera.theta = mouseMiddlePointXfactor * 180;
 
 		// Y Axis
-		if (camera.phi < 180)
-		{
-			camera.phi = mouseMiddlePointYfactor * 90;
-		}
-		else
-		{
-			camera.phi = 180;
-		}
 
-		if (camera.phi > 0)
-		{
 			camera.phi = mouseMiddlePointYfactor * 90;
+
+		if (camera.phi > 95)
+		{
+			camera.phi = 94;
 		}
-		else
+		if (camera.phi < 0)
 		{
 			camera.phi = 1;
 		}
