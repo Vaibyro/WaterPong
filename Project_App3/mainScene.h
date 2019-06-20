@@ -10,6 +10,7 @@ public:
 	void physiqueBalle(double delta_t);
 	void gestionCamera();
 	void genererVent();
+	int generateRandom();
 
 	void successThrowNoBounce(double delta_t);
 	void successThrowBounce(double delta_t);

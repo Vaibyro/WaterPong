@@ -41,7 +41,7 @@ void MainScene::setup()
 	ray = createComponent(shared_ptr<Form>(new Arrow(Vector3(0, 0, 0), RED)));
 	rayThrow = createComponent(shared_ptr<Form>(new Ray(Vector3(0, 0, 0), Vector3(0, 0, 0), RED)));
 
-	balle = createComponent(shared_ptr<Form>(new Sphere(radSphere, RED)), Vector3(0, 3, 0));
+	balle = createComponent(shared_ptr<Form>(new Sphere(radSphere, WHITE)), Vector3(0, 3, 0));
 	balle->addSphereCollider(radSphere, Vector3(0, 0, 0));
 	balle->getAnimation()->setSpeed(-2, 0, -1);
 
@@ -194,16 +194,27 @@ void MainScene::setup()
 	cout << "Main scene setup finished" << endl;
 }
 
+
+int MainScene::generateRandom()
+{
+	int value[2];
+	value[0] = 0;
+	value[1] = 1;
+
+	int tempindiceX = rand() % (100 - 1) + 1;
+	int modulo = tempindiceX % 2;
+	return value[modulo];
+}
+
 void MainScene::genererVent()
 {
-	double r = (double)rand() / (double)RAND_MAX;
-	vent.x = r * (1.0 + 1.0) - 1.0;
-	vent.y = r * (0.3 + 0.3) - 0.3;
-	vent.z = r * (1.0 + 1.0) - 1.0;
+	vent.x = generateRandom();
+	vent.y = generateRandom();
+	vent.z = generateRandom();
 
-	cout << "vent.x = " << vent.x << endl;
-	cout << "vent.y = " << vent.y << endl;
-	cout << "vent.Z = " << vent.z << endl;
+	cout << "valueX = " << vent.x << endl;
+	cout << "valueY = " << vent.y << endl;
+	cout << "valueZ = " << vent.z << endl;
 
 }
 

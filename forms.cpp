@@ -753,6 +753,7 @@ void MancheAAir::render()
 	
 	// calcul des angles
 	// Degree = radian * 180/π
+	/*
 	double angleX = 0;
 	double angleY = 0;
 	double angleZ = 0;
@@ -763,6 +764,7 @@ void MancheAAir::render()
 		angleX = -45;
 	else if ((abs(vent.y) > 0.10 && abs(vent.z) > 0.10))
 		angleX = -20;
+	*/
 
 
 
@@ -787,24 +789,24 @@ void MancheAAir::render()
 	*/
 
 
-	
-	// x
-	glRotated(angleX, 1, 0, 0);
 	/*
+	// x
+	glRotated(45, 1, 0, 0);
+	
 	// y
-	glRotated(angleY + 180, 0, 1, 0);
+	glRotated(90, 0, 1, 0);
 	// z
-	glRotated(angleZ, 0, 0, 1);
+	glRotated(45, 0, 0, 1);
 	*/
 
-	/*
+	
 	// x
 	glRotated((vent.x * 180/3.14), 1, 0, 0);
 	// y
 	glRotated((vent.y * 180 / 3.14) + 180, 0, 1, 0);
 	// z
 	glRotated((vent.z * 180 / 3.14), 0, 0, 1);
-	*/
+	
 	
 	glRotated(180, 0, 0, 1);
 	glColor3f(col.r, col.g, col.b);
