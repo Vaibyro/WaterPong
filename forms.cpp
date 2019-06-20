@@ -285,6 +285,24 @@ void Verre::render()
 
 	glPopMatrix();
 	glPushMatrix();
+
+	// fond du verre
+	GLUquadric* params;
+	params = gluNewQuadric();
+
+	// set possition
+	glTranslated(anim->getPosition().x, anim->getPosition().y + 0.06, anim->getPosition().z);
+	glRotated(90, -1, 0, 0);
+	glColor3f(0.0, 0.0, 0.72);
+
+	gluQuadricDrawStyle(params, GLU_FILL);
+	//gluQuadricTexture(params, GL_TRUE);
+	gluDisk(params, 0, rayBottom + 0.01, 20, 1);
+	//gluDisk(GLUquadric * params, inner (rayon interieur, outer (ryon externe), slices, loops);
+	//gluCylinder(params, rayBottom, rayTop, height, 20, 1);
+	//gluCylinder(GLUquadric* params,base,top,height,slices,stacks);
+	gluDeleteQuadric(params);
+
 }
 
 
