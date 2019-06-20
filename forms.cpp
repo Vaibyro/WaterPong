@@ -670,3 +670,66 @@ void Parallelepipede::render()
 	glEnd();
 
 }
+
+
+
+
+
+
+
+///////////////////////////////
+////	MANCHE A AIR	///////
+///////////////////////////////
+MancheAAir::MancheAAir(double hei, Color co)
+{
+	height = hei;
+	angleX = 0.0;
+	angleY = 0.0;
+	angleZ = 0.0;
+	col = co;
+}
+
+void MancheAAir::setAngle(double aX, double aY, double aZ)
+{
+	angleX = aX;
+	angleY = aY;
+	angleZ = aZ;
+}
+
+
+void MancheAAir::update(double delta_t)
+{
+	// Complete this part
+}
+
+void MancheAAir::render()
+{
+	double topRay = 0.15;
+	double bottomRay = 0.05;
+	double length = 0.8;
+
+
+	// create cilynder
+	GLUquadric* params;
+	params = gluNewQuadric();
+
+	// set possition
+	glTranslated(anim->getPosition().x, anim->getPosition().y, anim->getPosition().z);
+
+	// x
+	glRotated(angleX, 1, 0, 0);
+	// y
+	glRotated(angleY, 0, 1, 0);
+	// z
+	glRotated(angleZ, 0, 0, 1);
+
+	glColor3f(col.r, col.g, col.b);
+
+	gluQuadricDrawStyle(params, GLU_FLAT);
+
+	gluCylinder(params, bottomRay, topRay, length, 20, 1);
+	//gluCylinder(GLUquadric* params,base,top,height,slices,stacks);
+	gluDeleteQuadric(params);
+
+
+}
