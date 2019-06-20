@@ -20,10 +20,11 @@ const Color GREEN(0.0f, 1.0f, 0.0f);
 const Color YELLOW(1.0f, 1.0f, 0.0f);
 const Color WHITE(1.0f, 1.0f, 1.0f);
 const Color BROWN(0.3f, 0.0f, 0.0f);
-const Color SKIN(0.9f, 0.8f, 0.0f);
+const Color PURPLE(1.0f, 0.0f, 0.68f);
+const Color SKIN(1.0f, 0.57f, 0.4f);
 const Color FLOOR(0.6f, 0.6f, 0.6f);
-const Color GRASS(0.48f, 0.61f, 0.04f);
-const Color SKY(0.52f, 0.80f, 0.92f);
+const Color GRASS(0.22f, 0.61f, 0.13f);
+const Color SKY(0.35f, 0.53f, 0.91f);
 
 // Generic class to render and animate an object
 class Form

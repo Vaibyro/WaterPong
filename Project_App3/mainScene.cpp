@@ -34,7 +34,7 @@ void MainScene::setup()
 	balleSouris = createComponent(shared_ptr<Form>(new Sphere(radius, RED)), Vector3(1, 10, 0));
 	balleSouris->addSphereCollider(radius, Vector3(0, 0, 0));
 
-	auto planeform = shared_ptr<Plane>(new Plane(15.0, 15.0, FLOOR));
+	auto planeform = shared_ptr<Plane>(new Plane(15.0, 15.0, GRASS));
 	auto plane = createComponent(planeform, Vector3(0, niveauSol, 0));
 	collPlane = plane->addPlaneCollider(3.0, 3.0, Vector3(0, 0, 0));
 

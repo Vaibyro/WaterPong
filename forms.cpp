@@ -391,7 +391,7 @@ void Table::render()
 {
 	glPopMatrix();
 	glPushMatrix();
-	/*
+	
 	// pied
 	Parallelepipede piedTable = Parallelepipede(lenght, width, (heightTotal - heightTray), RED);
 	//Parallelepipede(double len, double wid, double hei, Color co);
@@ -403,7 +403,7 @@ void Table::render()
 
 	glPopMatrix();
 	glPushMatrix();
-	*/
+	
 	// plateau
 	Parallelepipede plateau = Parallelepipede(lenght, width, heightTray, GREEN);
 	auto animPlateau = make_shared<Animation>(anim->getPosition().x,
@@ -448,7 +448,7 @@ void Personnage::render()
 
 	Color couleurJambe = BLUE;
 	Color couleurBassin = BROWN;
-	Color couleurTronc = WHITE;
+	Color couleurTronc = PURPLE;
 	Color couleurPeau = SKIN;
 
 	// jambe gauche
