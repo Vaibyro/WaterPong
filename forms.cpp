@@ -9,20 +9,46 @@
 
 using namespace std;
 
+void enableLight()
+{
+	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat mat_shininess[] = { 50.0 };
+	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glShadeModel(GL_SMOOTH);
+
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
+	glColorMaterial(GL_FRONT_AND_BACK, GL_EMISSION);
+	glEnable(GL_COLOR_MATERIAL);
+}
+
+void disableLight()
+{
+	glDisable(GL_LIGHT0);
+	glDisable(GL_LIGHTING);
+}
+
 
 void Form::update(double delta_t)
 {
-    // Nothing to do here, animation update is done in child class method
+	// Nothing to do here, animation update is done in child class method
 }
 
 
 void Form::render()
 {
-    // Point of view for rendering
-    // Common for all Forms
-    Vector3 org = anim->getPosition();
-    glTranslated(org.x, org.y, org.z);
-    glColor3f(col.r, col.g, col.b);
+	// Point of view for rendering
+	// Common for all Forms
+	Vector3 org = anim->getPosition();
+	glTranslated(org.x, org.y, org.z);
+	glColor3f(col.r, col.g, col.b);
 
 	Vector3 scale = anim->getScale();
 	glScaled(scale.x, scale.y, scale.z);
@@ -31,8 +57,8 @@ void Form::render()
 
 Sphere::Sphere(double r, Color cl)
 {
-    radius = r;
-    col = cl;
+	radius = r;
+	col = cl;
 }
 
 
@@ -41,56 +67,59 @@ void Sphere::update(double delta_t)
 
 }
 
-
 void Sphere::render()
 {
-    GLUquadric *quad;
-    quad = gluNewQuadric();
+	enableLight();
+
+	GLUquadric *quad;
+	quad = gluNewQuadric();
 	Form::render();
 	gluSphere(quad, radius, 30, 20);
-    gluDeleteQuadric(quad);
+	gluDeleteQuadric(quad);
+
+	disableLight();
 }
 
 
 Cube_face::Cube_face(Vector3 v1, Vector3 v2, Vector3 org, double l, double w, Color cl)
 {
-    vdir1 = 1.0 / v1.norm() * v1;
-    vdir2 = 1.0 / v2.norm() * v2;
-    anim->setPosition(org);
-    length = l;
-    width = w;
-    col = cl;
+	vdir1 = 1.0 / v1.norm() * v1;
+	vdir2 = 1.0 / v2.norm() * v2;
+	anim->setPosition(org);
+	length = l;
+	width = w;
+	col = cl;
 }
 
 
 void Cube_face::update(double delta_t)
 {
-    // Do nothing, no physics associated to a Cube_face
+	// Do nothing, no physics associated to a Cube_face
 }
 
 
 void Cube_face::render()
 {
-    Point p1 = Point();
-    Point p2 = p1, p3, p4 = p1;
-    p2.translate(length*vdir1);
-    p3 = p2;
-    p3.translate(width*vdir2);
-    p4.translate(width*vdir2);
+	Point p1 = Point();
+	Point p2 = p1, p3, p4 = p1;
+	p2.translate(length*vdir1);
+	p3 = p2;
+	p3.translate(width*vdir2);
+	p4.translate(width*vdir2);
 
-    Form::render();
-    glBegin(GL_QUADS);
-    {
-        glColor3f(1,1,0);
-        glVertex3d(p1.x, p1.y, p1.z);
-        glColor3f(0,1,1);
-        glVertex3d(p2.x, p2.y, p2.z);
-        glColor3f(1,0,1);
-        glVertex3d(p3.x, p3.y, p3.z);
-        glColor3f(0,1,0);
-        glVertex3d(p4.x, p4.y, p4.z);
-    }
-    glEnd();
+	Form::render();
+	glBegin(GL_QUADS);
+	{
+		glColor3f(1, 1, 0);
+		glVertex3d(p1.x, p1.y, p1.z);
+		glColor3f(0, 1, 1);
+		glVertex3d(p2.x, p2.y, p2.z);
+		glColor3f(1, 0, 1);
+		glVertex3d(p3.x, p3.y, p3.z);
+		glColor3f(0, 1, 0);
+		glVertex3d(p4.x, p4.y, p4.z);
+	}
+	glEnd();
 }
 
 void Axis::update(double delta_t)
@@ -129,9 +158,34 @@ void Plane::update(double delta_t)
 	// Do nothing, no physics associated to a Cube_face
 }
 
+void Form::applyTexture()
+{
+	GLuint Nom;
+	glGenTextures(1, &Nom); 	//Génère un n° de texture
+	glBindTexture(GL_TEXTURE_2D, Nom); 	//Sélectionne ce n°
+	glTexImage2D(
+		GL_TEXTURE_2D, 	//Type : texture 2D
+		0, 	//Mipmap : aucun
+		GL_RGB, 	//Couleurs : 4
+		texture.getWidth(), 	//Largeur : 2
+		texture.getHeight(), 	//Hauteur : 2
+		0, 	//Largeur du bord : 0
+		GL_RGB, 	//Format : RGB
+		GL_UNSIGNED_BYTE, 	//Type des couleurs
+		texture.getData() 	//Addresse de l'image
+	);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
 
 void Plane::render()
 {
+	if (texture.isLoaded()) {
+		applyTexture();
+	}
+
+	glEnable(GL_TEXTURE_2D); 	//Active le texturing
+
 	Vector3 org = anim->getPosition();
 	glTranslated(org.x - length / 2.0, org.y, org.z - width / 2.0);
 	glColor3f(col.r, col.g, col.b);
@@ -147,15 +201,21 @@ void Plane::render()
 	glBegin(GL_QUADS);
 	{
 		//glColor3f(1, 1, 0);
+		glTexCoord2i(0, 0);
 		glVertex3d(p1.x, p1.y, p1.z);
 		//glColor3f(0, 1, 1);
+		glTexCoord2i(1, 0);
 		glVertex3d(p2.x, p2.y, p2.z);
 		//glColor3f(1, 0, 1);
+		glTexCoord2i(1, 1);
 		glVertex3d(p3.x, p3.y, p3.z);
 		//glColor3f(0, 1, 0);
+		glTexCoord2i(0, 1);
 		glVertex3d(p4.x, p4.y, p4.z);
 	}
 	glEnd();
+
+	glDisable(GL_TEXTURE_2D); 	//Active le texturing
 }
 
 Vector3& Plane::getNormal()
@@ -258,6 +318,7 @@ void Verre::update(double delta_t)
 
 void Verre::render()
 {
+	enableLight();
 
 	glPopMatrix();
 	glPushMatrix();
@@ -303,6 +364,7 @@ void Verre::render()
 	//gluCylinder(GLUquadric* params,base,top,height,slices,stacks);
 	gluDeleteQuadric(params);
 
+	disableLight();
 }
 
 
@@ -409,7 +471,7 @@ void Table::render()
 {
 	glPopMatrix();
 	glPushMatrix();
-	
+
 	// pied
 	Parallelepipede piedTable = Parallelepipede(lenght, width, (heightTotal - heightTray), RED);
 	//Parallelepipede(double len, double wid, double hei, Color co);
@@ -421,7 +483,7 @@ void Table::render()
 
 	glPopMatrix();
 	glPushMatrix();
-	
+
 	// plateau
 	Parallelepipede plateau = Parallelepipede(lenght, width, heightTray, GREEN);
 	auto animPlateau = make_shared<Animation>(anim->getPosition().x,
@@ -541,7 +603,7 @@ void Personnage::render()
 	Sphere tete = Sphere(rayonTete, couleurPeau);
 	auto animTete = make_shared<Animation>((anim->getPosition().x + rayonTete),
 		(anim->getPosition().y + hauteurJambe + hauteurBassin + hauteurTronc + rayonTete),
-		(anim->getPosition().z + (largeurTronc/2)));
+		(anim->getPosition().z + (largeurTronc / 2)));
 	tete.setAnim(animTete);
 	tete.render();
 
@@ -719,6 +781,8 @@ void MancheAAir::update(double delta_t)
 
 void MancheAAir::render()
 {
+	enableLight();
+
 	double topRay = 0.15;
 	double bottomRay = 0.05;
 	double length = 0.8;
@@ -750,7 +814,7 @@ void MancheAAir::render()
 	}
 	*/
 
-	
+
 	// calcul des angles
 	// Degree = radian * 180/π
 	double angleX = 0;
@@ -780,15 +844,15 @@ void MancheAAir::render()
 	else
 		angleZ = (vent.z * 180 / 3.14); */
 
-	/*
-	cout << "angle X = " << angleX << endl;
-	cout << "angle Y = " << angleY << endl;
-	cout << "angle Z = " << angleZ << endl;
-	*/
+		/*
+		cout << "angle X = " << angleX << endl;
+		cout << "angle Y = " << angleY << endl;
+		cout << "angle Z = " << angleZ << endl;
+		*/
 
 
-	
-	// x
+
+		// x
 	glRotated(angleX, 1, 0, 0);
 	/*
 	// y
@@ -805,7 +869,7 @@ void MancheAAir::render()
 	// z
 	glRotated((vent.z * 180 / 3.14), 0, 0, 1);
 	*/
-	
+
 	glRotated(180, 0, 0, 1);
 	glColor3f(col.r, col.g, col.b);
 
@@ -815,5 +879,5 @@ void MancheAAir::render()
 	//gluCylinder(GLUquadric* params,base,top,height,slices,stacks);
 	gluDeleteQuadric(params);
 
-
+	disableLight();
 }

@@ -28,7 +28,7 @@ private:
 	shared_ptr<Component> balleSouris;
 	shared_ptr<PlaneCollider> collPlane;
 	shared_ptr<BoxCollider> collTable;
-	shared_ptr<BoxCollider> collVerre1;
+
 	shared_ptr<BoxCollider> collVerre1_fond;
 
 	vector<shared_ptr<BoxCollider>> collVerres;
@@ -41,15 +41,7 @@ private:
 
 
 
-	shared_ptr<BoxCollider> collVerre2;
-	shared_ptr<BoxCollider> collVerre3;
-	shared_ptr<BoxCollider> collVerre4;
-	shared_ptr<BoxCollider> collVerre5;
-	shared_ptr<BoxCollider> collVerre6;
-	shared_ptr<BoxCollider> collVerre7;
-	shared_ptr<BoxCollider> collVerre8;
-	shared_ptr<BoxCollider> collVerre9;
-	shared_ptr<BoxCollider> collVerre10;
+
 	shared_ptr<BoxCollider> collPersonnage1;
 	shared_ptr<BoxCollider> collPersonnage2;
 	shared_ptr<Component> ray;
@@ -62,16 +54,7 @@ private:
 
 	vector<shared_ptr<Component>> verres;
 
-	shared_ptr<Component> verre1;
-	shared_ptr<Component> verre2;
-	shared_ptr<Component> verre3;
-	shared_ptr<Component> verre4;
-	shared_ptr<Component> verre5;
-	shared_ptr<Component> verre6;
-	shared_ptr<Component> verre7;
-	shared_ptr<Component> verre8;
-	shared_ptr<Component> verre9;
-	shared_ptr<Component> verre10;
+	
 	shared_ptr<Component> personnage1;
 	shared_ptr<Component> personnage2;
 	shared_ptr<Component> mancheAAir;

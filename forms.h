@@ -3,6 +3,7 @@
 
 #include "geometry.h"
 #include "animation.h"
+#include "Project_App3/texture.h"
 
 using namespace std;
 
@@ -32,12 +33,17 @@ class Form
 protected:
 	Color col;
 	shared_ptr<Animation> anim;
+	Texture2D texture;
 public:
 	shared_ptr<Animation> getAnim() { return anim; }
 	void setAnim(shared_ptr<Animation> ani) { anim = ani; }
 
 	void setColor(const Color& color) { col = color; };
 	const Color& getColor() { return col; };
+
+	void setTexture(const Texture2D& tex) { texture = tex; };
+	void applyTexture();
+
 
 	// This method should update the anim object with the corresponding physical model
 	// It has to be done in each inherited class, otherwise all forms will have the same movements !
@@ -100,6 +106,7 @@ private:
 	double length, width;
 public:
 	Plane(double l = 1.0, double w = 1.0, Color color = FLOOR) { length = l; width = w; col = color; };
+	Plane(double l, double w, const Texture2D& tex) : Plane(l, w) { length = l; width = w; texture = tex; };
 	Vector3& getNormal();
 	void update(double delta_t);
 	void render();

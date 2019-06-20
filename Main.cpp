@@ -140,6 +140,8 @@ bool initGL()
 		success = false;
 	}
 
+
+	
 	glEnable(GL_DEPTH_TEST);
 
 	return success;
