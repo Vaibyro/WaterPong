@@ -159,13 +159,9 @@ void MainScene::setup()
 	personnage1 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-3, -0.7, 0.3));
 	personnage2 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-3, -0.7, -0.8));
 
-	// manche a air
-	mancheAAir = createComponent(shared_ptr<Form>(new MancheAAir(0.2, RED)), Vector3(-1.0, 0.4, -1.2));
-	// MancheAAir(double hei, Color co)
-
-
-
-
+	// MancheAAir(Color co, angleX, angleY, angleZ)
+	mancheAAir = createComponent(shared_ptr<Form>(new MancheAAir(RED, vent)), Vector3(-1.0, 0.4, -1.2));
+	
 
 	lastCollisionSol = false;
 	lastCollisionTable = false;
@@ -189,12 +185,25 @@ void MainScene::setup()
 	camTranslationSpeed = 5.0;
 
 	masse = 0.027;
-	vent = Vector3(-1, 0, -1);
+
+
 
 	// L'initialisation de la scène est terminé.
 	cout << "Main scene setup finished" << endl;
 }
 
+void MainScene::genererVent()
+{
+	double r = (double)rand() / (double)RAND_MAX;
+	vent.x = r * (1.0 + 1.0) - 1.0;
+	vent.y = r * (0.3 + 0.3) - 0.3;
+	vent.z = r * (1.0 + 1.0) - 1.0;
+
+	cout << "vent.x = " << vent.x << endl;
+	cout << "vent.y = " << vent.y << endl;
+	cout << "vent.Z = " << vent.z << endl;
+
+}
 
 void MainScene::physiqueBalle(double delta_t)
 {
@@ -417,6 +426,13 @@ void MainScene::physiqueBalle(double delta_t)
 		// On enregistre le point de départ du tir
 		mouseDeparture = Vector3(x, y, z);
 		mousePressedLastState = true;
+
+		genererVent();
+		//vent = Vector3(2, 0, 1);
+		mancheAAir->setForm(shared_ptr<Form>(new MancheAAir(RED, vent)));
+
+		//mancheAAirForm->setAngle(vent.x, vent.y, vent.z);
+
 	}
 	
 	// --------------------------------------------------------------------------------------------------------------------

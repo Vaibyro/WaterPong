@@ -9,6 +9,7 @@ public:
 	void update(double delta_t);
 	void physiqueBalle(double delta_t);
 	void gestionCamera();
+	void genererVent();
 private:
 
 	// ===================================================================================================
@@ -65,6 +66,8 @@ private:
 	shared_ptr<Component> personnage1;
 	shared_ptr<Component> personnage2;
 	shared_ptr<Component> mancheAAir;
+	shared_ptr<MancheAAir> mancheAAirForm;
+
 	// ---------------------------------------------------------------------------------------------------
 
 	double radius;
