@@ -25,6 +25,10 @@ void MainScene::setup()
 	// For debugging
 	auto axis = createComponent(shared_ptr<Form>(new Axis()), Vector3(0, 0, 0));
 
+
+	auto skyBox = createComponent(shared_ptr<Form>(new Sphere(50, SKY)), Vector3(0, 0, 0));
+
+
 	// ============= Balle
 	radius = 0.5;
 	balleSouris = createComponent(shared_ptr<Form>(new Sphere(radius, RED)), Vector3(1, 10, 0));
@@ -58,90 +62,83 @@ void MainScene::setup()
 	double decalageTable = 0.1;
 	// Verre(double hei, double rayB, double rayT, Color coGob, Color coLiq)
 
+	double hauteurFondVerre = 0.1;
+
 	verre1 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.4 + decalageTable, -0.05, -0.3 + decalageTable + rayTopGlass));
 	collVerre1 = verre1->addBoxCollider(0.2, 0.1, 0.1, Vector3(0, 0, 0));
-	collVerre1_fond = verre1->addBoxCollider(0.15, 0.05, 0.05, Vector3(0, 0, 0));
+	collVerre1_fond = verre1->addBoxCollider(hauteurFondVerre, 0.05, 0.05, Vector3(0, 0, 0));
 	verres.push_back(verre1);
 	lastCollisionVerres.push_back(false);
 	collVerres.push_back(collVerre1);
 	collVerresFonds.push_back(collVerre1_fond);
 	lastPointCollisionsVerres.push_back(Vector3(0, 0, 0));
 
-
 	verre2 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.4 + decalageTable, -0.05, -0.2 + decalageTable + rayTopGlass));
 	collVerre2 = verre2->addBoxCollider(0.2, 0.1, 0.1, Vector3(0, 0, 0));
-	auto collVerre2_fond = verre2->addBoxCollider(0.15, 0.05, 0.05, Vector3(0, 0, 0));
+	auto collVerre2_fond = verre2->addBoxCollider(hauteurFondVerre, 0.05, 0.05, Vector3(0, 0, 0));
 	verres.push_back(verre2);
 	lastCollisionVerres.push_back(false);
 	collVerres.push_back(collVerre2);
 	collVerresFonds.push_back(collVerre2_fond);
 	lastPointCollisionsVerres.push_back(Vector3(0, 0, 0));
 	
-
-	
 	verre3 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.4 + decalageTable, -0.05, -0.1 + decalageTable + rayTopGlass));
 	collVerre3 = verre3->addBoxCollider(0.2, 0.1, 0.1, Vector3(0, 0, 0));
-	auto collVerre3_fond = verre3->addBoxCollider(0.15, 0.05, 0.05, Vector3(0, 0, 0));
+	auto collVerre3_fond = verre3->addBoxCollider(hauteurFondVerre, 0.05, 0.05, Vector3(0, 0, 0));
 	verres.push_back(verre3);
 	lastCollisionVerres.push_back(false);
 	collVerres.push_back(collVerre3);
 	collVerresFonds.push_back(collVerre3_fond);
 	lastPointCollisionsVerres.push_back(Vector3(0, 0, 0));
 
-	
 	verre4 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.4 + decalageTable, -0.05, 0 + decalageTable + rayTopGlass));
 	collVerre4 = verre4->addBoxCollider(0.2, 0.1, 0.1, Vector3(0, 0, 0));
-	auto collVerre4_fond = verre4->addBoxCollider(0.15, 0.05, 0.05, Vector3(0, 0, 0));
+	auto collVerre4_fond = verre4->addBoxCollider(hauteurFondVerre, 0.05, 0.05, Vector3(0, 0, 0));
 	verres.push_back(verre4);
 	lastCollisionVerres.push_back(false);
 	collVerres.push_back(collVerre4);
 	collVerresFonds.push_back(collVerre4_fond);
 	lastPointCollisionsVerres.push_back(Vector3(0, 0, 0));
 
-	
 	verre5 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.3 + decalageTable, -0.05, -0.25 + decalageTable + rayTopGlass));
 	collVerre5 = verre5->addBoxCollider(0.2, 0.1, 0.1, Vector3(0, 0, 0));
-	auto collVerre5_fond = verre5->addBoxCollider(0.15, 0.05, 0.05, Vector3(0, 0, 0));
+	auto collVerre5_fond = verre5->addBoxCollider(hauteurFondVerre, 0.05, 0.05, Vector3(0, 0, 0));
 	verres.push_back(verre5);
 	lastCollisionVerres.push_back(false);
 	collVerres.push_back(collVerre5);
 	collVerresFonds.push_back(collVerre5_fond);
 	lastPointCollisionsVerres.push_back(Vector3(0, 0, 0));
 	
-	
 	verre6 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.3 + decalageTable, -0.05, -0.15 + decalageTable + rayTopGlass));
 	collVerre6 = verre6->addBoxCollider(0.2, 0.1, 0.1, Vector3(0, 0, 0));
-	auto collVerre6_fond = verre6->addBoxCollider(0.15, 0.05, 0.05, Vector3(0, 0, 0));
+	auto collVerre6_fond = verre6->addBoxCollider(hauteurFondVerre, 0.05, 0.05, Vector3(0, 0, 0));
 	verres.push_back(verre6);
 	lastCollisionVerres.push_back(false);
 	collVerres.push_back(collVerre6);
 	collVerresFonds.push_back(collVerre6_fond);
 	lastPointCollisionsVerres.push_back(Vector3(0, 0, 0));
 
-
 	verre7 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.3 + decalageTable, -0.05, -0.05 + decalageTable + rayTopGlass));
 	collVerre7 = verre7->addBoxCollider(0.2, 0.1, 0.1, Vector3(0, 0, 0));
-	auto collVerre7_fond = verre7->addBoxCollider(0.15, 0.05, 0.05, Vector3(0, 0, 0));
+	auto collVerre7_fond = verre7->addBoxCollider(hauteurFondVerre, 0.05, 0.05, Vector3(0, 0, 0));
 	verres.push_back(verre7);
 	lastCollisionVerres.push_back(false);
 	collVerres.push_back(collVerre7);
 	collVerresFonds.push_back(collVerre7_fond);
 	lastPointCollisionsVerres.push_back(Vector3(0, 0, 0));
 
-	
 	verre8 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.2 + decalageTable, -0.05, -0.2 + decalageTable + rayTopGlass));
 	collVerre8 = verre8->addBoxCollider(0.2, 0.1, 0.1, Vector3(0, 0, 0));
-	auto collVerre8_fond = verre8->addBoxCollider(0.15, 0.05, 0.05, Vector3(0, 0, 0));
+	auto collVerre8_fond = verre8->addBoxCollider(hauteurFondVerre, 0.05, 0.05, Vector3(0, 0, 0));
 	verres.push_back(verre8);
 	lastCollisionVerres.push_back(false);
 	collVerres.push_back(collVerre8);
 	collVerresFonds.push_back(collVerre8_fond);
 	lastPointCollisionsVerres.push_back(Vector3(0, 0, 0));
 
-
 	verre9 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.2 + decalageTable, -0.05, -0.1 + decalageTable + rayTopGlass));
 	collVerre9 = verre9->addBoxCollider(0.2, 0.1, 0.1, Vector3(0, 0, 0));
-	auto collVerre9_fond = verre9->addBoxCollider(0.15, 0.05, 0.05, Vector3(0, 0, 0));
+	auto collVerre9_fond = verre9->addBoxCollider(hauteurFondVerre, 0.05, 0.05, Vector3(0, 0, 0));
 	verres.push_back(verre9);
 	lastCollisionVerres.push_back(false);
 	collVerres.push_back(collVerre9);
@@ -150,7 +147,7 @@ void MainScene::setup()
 
 	verre10 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.1 + decalageTable, -0.05, -0.15 + decalageTable + rayTopGlass));
 	collVerre10 = verre10->addBoxCollider(0.2, 0.1, 0.1, Vector3(0, 0, 0));
-	auto collVerre10_fond = verre10->addBoxCollider(0.15, 0.05, 0.05, Vector3(0, 0, 0));
+	auto collVerre10_fond = verre10->addBoxCollider(hauteurFondVerre, 0.05, 0.05, Vector3(0, 0, 0));
 	verres.push_back(verre10);
 	lastCollisionVerres.push_back(false);
 	collVerres.push_back(collVerre10);
