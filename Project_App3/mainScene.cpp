@@ -180,6 +180,9 @@ void MainScene::setup()
 
 	camTranslationSpeed = 5.0;
 
+	masse = 0.027;
+	vent = Vector3(-1, 0, -1);
+
 	// L'initialisation de la scène est terminé.
 	cout << "Main scene setup finished" << endl;
 }
@@ -330,7 +333,11 @@ void MainScene::physiqueBalle(double delta_t)
 		if (noCollision)
 		{
 			// Si pas de collisions, on applique la force de gravité.
-			speed_y -= (GRAVITY * delta_t);
+			//speed_y -= (GRAVITY * delta_t);
+
+			speed_x += + (0.5 * 1.2 * M_PI * (radSphere * radSphere) * 0.7 * (balle->getAnimation()->getSpeed().x * balle->getAnimation()->getSpeed().x) * delta_t) / masse + vent.x * 0.01 / 3.6;
+			speed_y += (0.5 * 1.2 * M_PI * (radSphere * radSphere) * 0.7 * (balle->getAnimation()->getSpeed().y * balle->getAnimation()->getSpeed().y) * delta_t) / masse - (GRAVITY * delta_t) + vent.y / 3.6;
+			speed_z += (0.5 * 1.2 * M_PI * (radSphere * radSphere) * 0.7 * (balle->getAnimation()->getSpeed().z * balle->getAnimation()->getSpeed().z) * delta_t) / masse + vent.z * 0.01 / 3.6;
 
 			// On indique qu'il n'y a pas eu de collision sur cette frame.
 			lastCollisionSol = false;
@@ -382,9 +389,18 @@ void MainScene::physiqueBalle(double delta_t)
 	else
 	{
 		// Si le click gauche n'est pas enfoncé, on n'est pas en mode lancer et on laisse la physique se débrouiller pour positionner la balle
-		x = balle->getAnimation()->getPosition().x + balle->getAnimation()->getSpeed().x * delta_t;
-		y = balle->getAnimation()->getPosition().y + balle->getAnimation()->getSpeed().y * delta_t - GRAVITY * (delta_t * delta_t) / 2.0; // Gravité
-		z = balle->getAnimation()->getPosition().z + balle->getAnimation()->getSpeed().z * delta_t;
+		//x = balle->getAnimation()->getPosition().x + balle->getAnimation()->getSpeed().x * delta_t;
+		//y = balle->getAnimation()->getPosition().y + balle->getAnimation()->getSpeed().y * delta_t - GRAVITY * (delta_t * delta_t) / 2.0; // Gravité
+		//z = balle->getAnimation()->getPosition().z + balle->getAnimation()->getSpeed().z * delta_t;
+
+		double Ftx = (0.5 * 1.2 * M_PI * (radSphere * radSphere) * 0.7 * (balle->getAnimation()->getSpeed().x * balle->getAnimation()->getSpeed().x) * delta_t * delta_t) / 2.0 * masse;
+		double Fty = (0.5 * 1.2 * M_PI * (radSphere * radSphere) * 0.7 * (balle->getAnimation()->getSpeed().y * balle->getAnimation()->getSpeed().y) * delta_t * delta_t) / 2.0 * masse;
+		double Ftz = (0.5 * 1.2 * M_PI * (radSphere * radSphere) * 0.7 * (balle->getAnimation()->getSpeed().z * balle->getAnimation()->getSpeed().z) * delta_t * delta_t) / 2.0 * masse;
+
+		x = balle->getAnimation()->getPosition().x + balle->getAnimation()->getSpeed().x * delta_t + (Ftx * (delta_t * delta_t)) / 2 * masse;
+		y = balle->getAnimation()->getPosition().y + balle->getAnimation()->getSpeed().y * delta_t - GRAVITY * (delta_t * delta_t) / 2.0 + (Fty * (delta_t * delta_t)) / 2 * masse;
+		z = balle->getAnimation()->getPosition().z + balle->getAnimation()->getSpeed().z * delta_t + (Ftz * (delta_t * delta_t));
+
 	}
 
 	// Front montant souris : se produit lors du changement d'état du click gauche.
