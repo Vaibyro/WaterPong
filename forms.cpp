@@ -733,16 +733,62 @@ void MancheAAir::render()
 	*/
 
 	
-
+	// calcul des angles
 	// Degree = radian * 180/π
+	double angleX = 0;
+	double angleY = 0;
+	double angleZ = 0;
+
+	if (abs(vent.y) > 0.5 && abs(vent.z) > 0.5)
+		angleX = -90;
+	else if ((abs(vent.y) > 0.25 && abs(vent.z) > 0.25))
+		angleX = -45;
+	else if ((abs(vent.y) > 0.10 && abs(vent.z) > 0.10))
+		angleX = -20;
+
+
+
+	/*
+	else
+		angleX = (vent.x * 180 / 3.14);
+
+	if ((vent.y * 180 / 3.14) + 180 < 0)
+		angleY = -((vent.y * 180 / 3.14) + 180);
+	else
+		angleY = (vent.y * 180 / 3.14) + 180;
+
+	if ((vent.z * 180 / 3.14) < 0)
+		angleZ = -((vent.z * 180 / 3.14));
+	else
+		angleZ = (vent.z * 180 / 3.14); */
+
+	/*
+	cout << "angle X = " << angleX << endl;
+	cout << "angle Y = " << angleY << endl;
+	cout << "angle Z = " << angleZ << endl;
+	*/
+
+
+	
+	// x
+	glRotated(angleX, 1, 0, 0);
+	/*
+	// y
+	glRotated(angleY + 180, 0, 1, 0);
+	// z
+	glRotated(angleZ, 0, 0, 1);
+	*/
+
+	/*
 	// x
 	glRotated((vent.x * 180/3.14), 1, 0, 0);
 	// y
 	glRotated((vent.y * 180 / 3.14) + 180, 0, 1, 0);
 	// z
 	glRotated((vent.z * 180 / 3.14), 0, 0, 1);
+	*/
 	
-
+	glRotated(180, 0, 0, 1);
 	glColor3f(col.r, col.g, col.b);
 
 	gluQuadricDrawStyle(params, GLU_FLAT);

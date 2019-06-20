@@ -10,6 +10,15 @@ public:
 	void physiqueBalle(double delta_t);
 	void gestionCamera();
 	void genererVent();
+
+	void successThrowNoBounce(double delta_t);
+	void successThrowBounce(double delta_t);
+	void failThrow(double delta_t);
+	void tableThrow(double delta_t);
+	void hardThrow(double delta_t);
+	void inhumanThrow(double delta_t);
+
+
 private:
 
 	// ===================================================================================================
