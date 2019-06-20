@@ -230,4 +230,23 @@ public:
 	void update(double delta_t);
 	void render();
 };
+
+
+class MancheAAir : public Form
+{
+private:
+	double height;
+	double angleX;
+	double angleY;
+	double angleZ;
+public:
+	MancheAAir(double hei, Color co);
+	void setAngle(double aX, double aY, double aZ);
+
+	void update(double delta_t);
+	void render();
+};
+
+
+
 #endif // FORMS_H_INCLUDED

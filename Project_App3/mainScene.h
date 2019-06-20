@@ -64,6 +64,7 @@ private:
 	shared_ptr<Component> verre10;
 	shared_ptr<Component> personnage1;
 	shared_ptr<Component> personnage2;
+	shared_ptr<Component> mancheAAir;
 	// ---------------------------------------------------------------------------------------------------
 
 	double radius;

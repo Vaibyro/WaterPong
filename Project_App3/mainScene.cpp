@@ -41,7 +41,7 @@ void MainScene::setup()
 	ray = createComponent(shared_ptr<Form>(new Arrow(Vector3(0, 0, 0), RED)));
 	rayThrow = createComponent(shared_ptr<Form>(new Ray(Vector3(0, 0, 0), Vector3(0, 0, 0), RED)));
 
-	balle = createComponent(shared_ptr<Form>(new Sphere(radSphere, WHITE)), Vector3(0, 3, 0));
+	balle = createComponent(shared_ptr<Form>(new Sphere(radSphere, RED)), Vector3(0, 3, 0));
 	balle->addSphereCollider(radSphere, Vector3(0, 0, 0));
 	balle->getAnimation()->setSpeed(-2, 0, -1);
 
@@ -158,6 +158,14 @@ void MainScene::setup()
 	// personnages
 	personnage1 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-3, -0.7, 0.3));
 	personnage2 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-3, -0.7, -0.8));
+
+	// manche a air
+	mancheAAir = createComponent(shared_ptr<Form>(new MancheAAir(0.2, RED)), Vector3(-1.0, 0.4, -1.2));
+	// MancheAAir(double hei, Color co)
+
+
+
+
 
 	lastCollisionSol = false;
 	lastCollisionTable = false;
