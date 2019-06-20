@@ -24,30 +24,23 @@ void MainScene::setup()
 	camera.rho = 4.0;
 
 	// For debugging
-	auto axis = createComponent(shared_ptr<Form>(new Axis()), Vector3(0, 0, 0));
-
-
+	auto axis = createComponent(shared_ptr<Form>(new Axis()), Vector3(-2, -0.35, -2));
 	auto skyBox = createComponent(shared_ptr<Form>(new Sphere(50, SKY)), Vector3(0, 0, 0));
 
-
 	// ============= Balle
-	radius = 0.5;
-	balleSouris = createComponent(shared_ptr<Form>(new Sphere(radius, RED)), Vector3(1, 10, 0));
-	balleSouris->addSphereCollider(radius, Vector3(0, 0, 0));
 
-	auto texture = Texture2D("./herbe.bmp");
-	auto planeform = shared_ptr<Plane>(new Plane(15.0, 15.0, texture));
+	auto texture = Texture2D("./herbe.bmp"); // Initialisation de la texture 2D
+	auto planeform = shared_ptr<Plane>(new Plane(50.0, 50.0, texture));
 	auto plane = createComponent(planeform, Vector3(0, niveauSol, 0));
 	collPlane = plane->addPlaneCollider(3.0, 3.0, Vector3(0, 0, 0));
 
-	ray = createComponent(shared_ptr<Form>(new Arrow(Vector3(0, 0, 0), RED)));
-	rayThrow = createComponent(shared_ptr<Form>(new Ray(Vector3(0, 0, 0), Vector3(0, 0, 0), RED)));
+	//ray = createComponent(shared_ptr<Form>(new Arrow(Vector3(0, 0, 0), RED)));
+	//rayThrow = createComponent(shared_ptr<Form>(new Ray(Vector3(0, 0, 0), Vector3(0, 0, 0), RED)));
 
-	balle = createComponent(shared_ptr<Form>(new Sphere(radSphere, RED)), Vector3(0, 3, 0));
-	balle->addSphereCollider(radSphere, Vector3(0, 0, 0));
+	balle = createComponent(shared_ptr<Form>(new Sphere(rayonBalle, RED)), Vector3(0, 3, 0));
+	balle->addSphereCollider(rayonBalle, Vector3(0, 0, 0));
 	balle->getAnimation()->setSpeed(-2, 0, -1);
 
-	d = 5.0;
 
 	// ============= Décor
 
@@ -68,7 +61,7 @@ void MainScene::setup()
 
 	auto verre1 = createComponent(shared_ptr<Form>(new Verre(heightGlass, rayBottomGlass, rayTopGlass, RED, BLUE)), Vector3(-2.4 + decalageTable, -0.05, -0.3 + decalageTable + rayTopGlass));
 	auto collVerre1 = verre1->addBoxCollider(0.2, 0.1, 0.1, Vector3(0, 0, 0));
-	collVerre1_fond = verre1->addBoxCollider(hauteurFondVerre, 0.05, 0.05, Vector3(0, 0, 0));
+	auto collVerre1_fond = verre1->addBoxCollider(hauteurFondVerre, 0.05, 0.05, Vector3(0, 0, 0));
 	verres.push_back(verre1);
 	lastCollisionVerres.push_back(false);
 	collVerres.push_back(collVerre1);
@@ -287,7 +280,7 @@ void MainScene::physiqueBalle(double delta_t)
 		lastCollisionSol = true;
 
 		// Sécurité pour pas que la balle parte dans le sol...
-		balle->setY(niveauSol + radSphere);
+		balle->setY(niveauSol + rayonBalle);
 	}
 	else if (!lastCollisionTable && collisionTable) // Si une collision vient d'être detectée avec la table (sur n'importe quel côté)
 	{
@@ -317,7 +310,7 @@ void MainScene::physiqueBalle(double delta_t)
 		// Sécurité pour pas que la balle ne parte dans la table...
 		if (lastPointCollisionTable.y == 1.0)
 		{
-			balle->setY(niveauTable + radSphere);
+			balle->setY(niveauTable + rayonBalle);
 		}
 
 		// TODO: vérifier s'il faut d'autres sécurités pour les côtés de la table
@@ -356,9 +349,9 @@ void MainScene::physiqueBalle(double delta_t)
 			// Si pas de collisions, on applique la force de gravité.
 			//speed_y -= (GRAVITY * delta_t);
 
-			speed_x += + (0.5 * 1.2 * M_PI * (radSphere * radSphere) * 0.7 * (balle->getAnimation()->getSpeed().x * balle->getAnimation()->getSpeed().x) * delta_t) / masse + vent.x * 0.01 / 3.6;
-			speed_y += (0.5 * 1.2 * M_PI * (radSphere * radSphere) * 0.7 * (balle->getAnimation()->getSpeed().y * balle->getAnimation()->getSpeed().y) * delta_t) / masse - (GRAVITY * delta_t) + vent.y / 3.6;
-			speed_z += (0.5 * 1.2 * M_PI * (radSphere * radSphere) * 0.7 * (balle->getAnimation()->getSpeed().z * balle->getAnimation()->getSpeed().z) * delta_t) / masse + vent.z * 0.01 / 3.6;
+			speed_x += + (0.5 * 1.2 * M_PI * (rayonBalle * rayonBalle) * 0.7 * (balle->getAnimation()->getSpeed().x * balle->getAnimation()->getSpeed().x) * delta_t) / masse + vent.x * 0.01 / 3.6;
+			speed_y += (0.5 * 1.2 * M_PI * (rayonBalle * rayonBalle) * 0.7 * (balle->getAnimation()->getSpeed().y * balle->getAnimation()->getSpeed().y) * delta_t) / masse - (GRAVITY * delta_t) + vent.y / 3.6;
+			speed_z += (0.5 * 1.2 * M_PI * (rayonBalle * rayonBalle) * 0.7 * (balle->getAnimation()->getSpeed().z * balle->getAnimation()->getSpeed().z) * delta_t) / masse + vent.z * 0.01 / 3.6;
 
 			// On indique qu'il n'y a pas eu de collision sur cette frame.
 			lastCollisionSol = false;
@@ -414,9 +407,9 @@ void MainScene::physiqueBalle(double delta_t)
 		//y = balle->getAnimation()->getPosition().y + balle->getAnimation()->getSpeed().y * delta_t - GRAVITY * (delta_t * delta_t) / 2.0; // Gravité
 		//z = balle->getAnimation()->getPosition().z + balle->getAnimation()->getSpeed().z * delta_t;
 
-		double Ftx = (0.5 * 1.2 * M_PI * (radSphere * radSphere) * 0.7 * (balle->getAnimation()->getSpeed().x * balle->getAnimation()->getSpeed().x) * delta_t * delta_t) / 2.0 * masse;
-		double Fty = (0.5 * 1.2 * M_PI * (radSphere * radSphere) * 0.7 * (balle->getAnimation()->getSpeed().y * balle->getAnimation()->getSpeed().y) * delta_t * delta_t) / 2.0 * masse;
-		double Ftz = (0.5 * 1.2 * M_PI * (radSphere * radSphere) * 0.7 * (balle->getAnimation()->getSpeed().z * balle->getAnimation()->getSpeed().z) * delta_t * delta_t) / 2.0 * masse;
+		double Ftx = (0.5 * 1.2 * M_PI * (rayonBalle * rayonBalle) * 0.7 * (balle->getAnimation()->getSpeed().x * balle->getAnimation()->getSpeed().x) * delta_t * delta_t) / 2.0 * masse;
+		double Fty = (0.5 * 1.2 * M_PI * (rayonBalle * rayonBalle) * 0.7 * (balle->getAnimation()->getSpeed().y * balle->getAnimation()->getSpeed().y) * delta_t * delta_t) / 2.0 * masse;
+		double Ftz = (0.5 * 1.2 * M_PI * (rayonBalle * rayonBalle) * 0.7 * (balle->getAnimation()->getSpeed().z * balle->getAnimation()->getSpeed().z) * delta_t * delta_t) / 2.0 * masse;
 
 		x = balle->getAnimation()->getPosition().x + balle->getAnimation()->getSpeed().x * delta_t + (Ftx * (delta_t * delta_t)) / 2 * masse;
 		y = balle->getAnimation()->getPosition().y + balle->getAnimation()->getSpeed().y * delta_t - GRAVITY * (delta_t * delta_t) / 2.0 + (Fty * (delta_t * delta_t)) / 2 * masse;

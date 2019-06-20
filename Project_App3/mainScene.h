@@ -25,36 +25,25 @@ private:
 	// FORMS
 	// ---------------------------------------------------------------------------------------------------
 	// Objets de l'action
-	shared_ptr<Component> balleSouris;
 	shared_ptr<PlaneCollider> collPlane;
 	shared_ptr<BoxCollider> collTable;
-
-	shared_ptr<BoxCollider> collVerre1_fond;
-
 	vector<shared_ptr<BoxCollider>> collVerres;
 	vector<shared_ptr<BoxCollider>> collVerresFonds;
 	vector<Vector3> lastPointCollisionsVerres;
 	vector<bool> lastCollisionVerres;
 
-	Vector3 lastPointCollisionVerre1; // a virer
-	bool lastCollisionVerre1;
-
-
-
-
+	// Colliders personnages
 	shared_ptr<BoxCollider> collPersonnage1;
 	shared_ptr<BoxCollider> collPersonnage2;
+
 	shared_ptr<Component> ray;
 	shared_ptr<Component> rayThrow;
-	//shared_ptr<Component> point;
 	shared_ptr<Component> balle;
 
 	// Decor
 	shared_ptr<Component> table;
-
 	vector<shared_ptr<Component>> verres;
 
-	
 	shared_ptr<Component> personnage1;
 	shared_ptr<Component> personnage2;
 	shared_ptr<Component> mancheAAir;
@@ -62,12 +51,7 @@ private:
 
 	// ---------------------------------------------------------------------------------------------------
 
-	double radius;
-	double rB;
-
-	double d;
-
-	double radSphere = 0.02;
+	double rayonBalle = 0.02;
 	double niveauSol = -0.7;
 	double niveauTable = 0.0;
 	bool lastCollisionSol;
@@ -104,7 +88,6 @@ private:
 
 	Vector3 lastPointCollisionTable;
 	
-
 	// vent
 	Vector3 vent;
 };

@@ -9,6 +9,7 @@
 
 using namespace std;
 
+// For opengl light
 void enableLight()
 {
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
@@ -52,6 +53,26 @@ void Form::render()
 
 	Vector3 scale = anim->getScale();
 	glScaled(scale.x, scale.y, scale.z);
+}
+
+void Form::applyTexture()
+{
+	GLuint Nom;
+	glGenTextures(1, &Nom); 	//Génère un n° de texture
+	glBindTexture(GL_TEXTURE_2D, Nom); 	//Sélectionne ce n°
+	glTexImage2D(
+		GL_TEXTURE_2D, 	//Type : texture 2D
+		0, 	//Mipmap : aucun
+		GL_RGB, 	//Couleurs : 4
+		texture.getWidth(), 	//Largeur : 2
+		texture.getHeight(), 	//Hauteur : 2
+		0, 	//Largeur du bord : 0
+		GL_RGB, 	//Format : RGB
+		GL_UNSIGNED_BYTE, 	//Type des couleurs
+		texture.getData() 	//Addresse de l'image
+	);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 
@@ -158,26 +179,6 @@ void Plane::update(double delta_t)
 	// Do nothing, no physics associated to a Cube_face
 }
 
-void Form::applyTexture()
-{
-	GLuint Nom;
-	glGenTextures(1, &Nom); 	//Génère un n° de texture
-	glBindTexture(GL_TEXTURE_2D, Nom); 	//Sélectionne ce n°
-	glTexImage2D(
-		GL_TEXTURE_2D, 	//Type : texture 2D
-		0, 	//Mipmap : aucun
-		GL_RGB, 	//Couleurs : 4
-		texture.getWidth(), 	//Largeur : 2
-		texture.getHeight(), 	//Hauteur : 2
-		0, 	//Largeur du bord : 0
-		GL_RGB, 	//Format : RGB
-		GL_UNSIGNED_BYTE, 	//Type des couleurs
-		texture.getData() 	//Addresse de l'image
-	);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-}
-
 void Plane::render()
 {
 	if (texture.isLoaded()) {
@@ -201,16 +202,16 @@ void Plane::render()
 	glBegin(GL_QUADS);
 	{
 		//glColor3f(1, 1, 0);
-		glTexCoord2i(0, 0);
+		glTexCoord2f(0.0f, 0.0f);
 		glVertex3d(p1.x, p1.y, p1.z);
 		//glColor3f(0, 1, 1);
-		glTexCoord2i(1, 0);
+		glTexCoord2f(10.0f, 0.0f);
 		glVertex3d(p2.x, p2.y, p2.z);
 		//glColor3f(1, 0, 1);
-		glTexCoord2i(1, 1);
+		glTexCoord2f(10.0f, 10.0f);
 		glVertex3d(p3.x, p3.y, p3.z);
 		//glColor3f(0, 1, 0);
-		glTexCoord2i(0, 1);
+		glTexCoord2f(0.0f, 10.0f);
 		glVertex3d(p4.x, p4.y, p4.z);
 	}
 	glEnd();
@@ -319,9 +320,6 @@ void Verre::update(double delta_t)
 void Verre::render()
 {
 	enableLight();
-
-	glPopMatrix();
-	glPushMatrix();
 
 	// liquide
 	Liquide liquide = Liquide(height - 0.005, rayBottom - 0.002, rayTop - 0.002, colorLiquide);
@@ -469,9 +467,6 @@ void Table::update(double delta_t)
 
 void Table::render()
 {
-	glPopMatrix();
-	glPushMatrix();
-
 	// pied
 	Parallelepipede piedTable = Parallelepipede(lenght, width, (heightTotal - heightTray), RED);
 	//Parallelepipede(double len, double wid, double hei, Color co);
@@ -491,10 +486,6 @@ void Table::render()
 		anim->getPosition().z);
 	plateau.setAnim(animPlateau);
 	plateau.render();
-
-	glPopMatrix();
-	glPushMatrix();
-
 }
 
 
@@ -513,9 +504,6 @@ void Personnage::update(double delta_t)
 
 void Personnage::render()
 {
-	glPopMatrix();
-	glPushMatrix();
-
 	double rayonTete = 0.15;
 	double largeurBras = 0.1;
 	double hauteurBras = 0.5;
@@ -606,10 +594,6 @@ void Personnage::render()
 		(anim->getPosition().z + (largeurTronc / 2)));
 	tete.setAnim(animTete);
 	tete.render();
-
-	glPopMatrix();
-	glPushMatrix();
-
 }
 
 
