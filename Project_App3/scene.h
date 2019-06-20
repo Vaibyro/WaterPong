@@ -45,12 +45,27 @@ public:
 	double theta;
 };
 
+
+class Keyboard
+{
+public:
+	bool oneNumericButtonPressed;
+	bool twoNumericButtonPressed;
+	bool threeNumericButtonPressed;
+	bool fourNumericButtonPressed;
+	bool fiveNumericButtonPressed;
+	bool sixNumericButtonPressed;
+	bool cameraBalleView;
+};
+
+
 class Scene
 {
 public:
 	Mouse mouse;
 	Screen screen;
 	Camera camera;
+	Keyboard keyboard;
 
 	Scene();
 	virtual void setup();

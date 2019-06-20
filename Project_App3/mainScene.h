@@ -9,6 +9,15 @@ public:
 	void update(double delta_t);
 	void physiqueBalle(double delta_t);
 	void gestionCamera();
+
+	void successThrowNoBounce(double delta_t);
+	void successThrowBounce(double delta_t);
+	void failThrow(double delta_t);
+	void tableThrow(double delta_t);
+	void hardThrow(double delta_t);
+	void inhumanThrow(double delta_t);
+
+
 private:
 
 	// ===================================================================================================
@@ -112,4 +121,8 @@ private:
 
 	// vent
 	Vector3 vent;
+
+
+
+
 };
