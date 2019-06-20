@@ -28,6 +28,8 @@ private:
 	shared_ptr<BoxCollider> collVerre8;
 	shared_ptr<BoxCollider> collVerre9;
 	shared_ptr<BoxCollider> collVerre10;
+	shared_ptr<BoxCollider> collPersonnage1;
+	shared_ptr<BoxCollider> collPersonnage2;
 	shared_ptr<Component> ray;
 	shared_ptr<Component> rayThrow;
 	//shared_ptr<Component> point;
