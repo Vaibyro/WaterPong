@@ -391,54 +391,20 @@ void Table::render()
 {
 	glPopMatrix();
 	glPushMatrix();
-
-	// pied 1
-	Parallelepipede pied1 = Parallelepipede(widthFoot, widthFoot, heightTotal-heightTray, RED);
+	/*
+	// pied
+	Parallelepipede piedTable = Parallelepipede(lenght, width, (heightTotal - heightTray), RED);
 	//Parallelepipede(double len, double wid, double hei, Color co);
-	auto animPied1 = make_shared<Animation>(anim->getPosition().x,
+	auto animPiedTable = make_shared<Animation>(anim->getPosition().x,
 		anim->getPosition().y,
 		anim->getPosition().z);
-	pied1.setAnim(animPied1);
-	pied1.render();
+	piedTable.setAnim(animPiedTable);
+	piedTable.render();
 
 	glPopMatrix();
 	glPushMatrix();
-
-	// pied 2
-	Parallelepipede pied2 = Parallelepipede(widthFoot, widthFoot, heightTotal - heightTray, RED);
-	auto animPied2 = make_shared<Animation>(anim->getPosition().x,
-		anim->getPosition().y,
-		anim->getPosition().z + width - widthFoot);
-	pied2.setAnim(animPied2);
-	pied2.render();
-
-	glPopMatrix();
-	glPushMatrix();
-
-	// pied 3
-	Parallelepipede pied3 = Parallelepipede(widthFoot, widthFoot, heightTotal - heightTray, RED);
-	auto animPied3 = make_shared<Animation>(anim->getPosition().x + lenght - widthFoot,
-		anim->getPosition().y,
-		anim->getPosition().z + width - widthFoot);
-	pied3.setAnim(animPied3);
-	pied3.render();
-
-	glPopMatrix();
-	glPushMatrix();
-
-	// pied 4
-	Parallelepipede pied4 = Parallelepipede(widthFoot, widthFoot, heightTotal - heightTray, RED);
-	auto animPied4 = make_shared<Animation>(anim->getPosition().x + lenght - widthFoot,
-		anim->getPosition().y,
-		anim->getPosition().z);
-	pied4.setAnim(animPied4);
-	pied4.render();
-
-	glPopMatrix();
-	glPushMatrix();
-
+	*/
 	// plateau
-	// pied 1
 	Parallelepipede plateau = Parallelepipede(lenght, width, heightTray, GREEN);
 	auto animPlateau = make_shared<Animation>(anim->getPosition().x,
 		anim->getPosition().y + heightTotal - heightTray,
