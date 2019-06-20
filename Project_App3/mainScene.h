@@ -19,6 +19,18 @@ private:
 	shared_ptr<PlaneCollider> collPlane;
 	shared_ptr<BoxCollider> collTable;
 	shared_ptr<BoxCollider> collVerre1;
+	shared_ptr<BoxCollider> collVerre1_fond;
+
+	vector<shared_ptr<BoxCollider>> collVerres;
+	vector<shared_ptr<BoxCollider>> collVerresFonds;
+	vector<Vector3> lastPointCollisionsVerres;
+	vector<bool> lastCollisionVerres;
+
+	Vector3 lastPointCollisionVerre1; // a virer
+	bool lastCollisionVerre1;
+
+
+
 	shared_ptr<BoxCollider> collVerre2;
 	shared_ptr<BoxCollider> collVerre3;
 	shared_ptr<BoxCollider> collVerre4;
@@ -35,6 +47,9 @@ private:
 
 	// Decor
 	shared_ptr<Component> table;
+
+	vector<shared_ptr<Component>> verres;
+
 	shared_ptr<Component> verre1;
 	shared_ptr<Component> verre2;
 	shared_ptr<Component> verre3;
@@ -59,6 +74,7 @@ private:
 	double niveauTable = 0.0;
 	bool lastCollisionSol;
 	bool lastCollisionTable;
+	
 	bool mousePressedLastState;
 
 	// ===================================================================================================
@@ -87,4 +103,5 @@ private:
 	Vector3 mouseArrival;
 
 	Vector3 lastPointCollisionTable;
+	
 };
