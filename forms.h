@@ -236,12 +236,10 @@ class MancheAAir : public Form
 {
 private:
 	double height;
-	double angleX;
-	double angleY;
-	double angleZ;
+	Vector3 vent;
 public:
-	MancheAAir(double hei, Color co);
-	void setAngle(double aX, double aY, double aZ);
+	MancheAAir(Color co, Vector3 vent);
+	//void setAngle(double aX, double aY, double aZ);
 
 	void update(double delta_t);
 	void render();
