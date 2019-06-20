@@ -342,7 +342,58 @@ int main(int argc, char* args[])
 							scene->camera.rho = 4.0;
 							break;
 
-							// Quit the program when 'q' or Escape keys are pressed
+							// Modes
+						case SDLK_1:
+							scene->keyboard.oneNumericButtonPressed = true;
+							break;
+
+						case SDLK_2:
+							scene->keyboard.twoNumericButtonPressed = true;
+							break;
+
+						case SDLK_3:
+							scene->keyboard.threeNumericButtonPressed = true;
+							break;
+
+						case SDLK_4:
+							scene->keyboard.fourNumericButtonPressed = true;
+							break;
+
+						case SDLK_5:
+							scene->keyboard.fiveNumericButtonPressed = true;
+							break;
+
+						case SDLK_6:
+							scene->keyboard.sixNumericButtonPressed = true;
+							break;
+
+						// supprimer vent
+						case SDLK_v:
+							if (!scene->keyboard.wind)
+							{
+								scene->keyboard.wind = true;
+							}
+							else
+							{
+								scene->keyboard.wind = false;
+							}
+							break;
+
+						// camera mode shuffle
+						case SDLK_c:
+							if (!scene->keyboard.cameraBalleView)
+							{
+								scene->keyboard.cameraBalleView = true;
+							}
+							else
+							{
+								scene->keyboard.cameraBalleView = false;
+							}
+							break;
+
+
+
+						// Quit the program when 'q' or Escape keys are pressed
 						case SDLK_q:
 						case SDLK_ESCAPE:
 							quit = true;

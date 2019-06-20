@@ -191,6 +191,8 @@ void MainScene::setup()
 	masse = 0.027;
 	vent = Vector3(-1, 0, -1);
 
+	//mancheAAir->setAngle(vent.x, vent.y, vent.z);
+
 	// L'initialisation de la scène est terminé.
 	cout << "Main scene setup finished" << endl;
 }
@@ -444,6 +446,44 @@ void MainScene::physiqueBalle(double delta_t)
 }
 
 
+void MainScene::successThrowBounce(double delta_t)
+{
+	balle->getAnimation()->setPosition(0, 0.5, 0);
+	balle->getAnimation()->setSpeed(Vector3(-2.1, 2.8, 0));
+}
+
+void MainScene::successThrowNoBounce(double delta_t)
+{
+	balle->getAnimation()->setPosition(0, 1.3, 0);
+	balle->getAnimation()->setSpeed(Vector3(-3.30, 1.9, 0.22));
+}
+
+void MainScene::failThrow(double delta_t)
+{
+	balle->getAnimation()->setPosition(0, 0.5, 0);
+	balle->getAnimation()->setSpeed(Vector3(-2.1, 2.8, -2.5));
+}
+
+void MainScene::tableThrow(double delta_t)
+{
+	balle->getAnimation()->setPosition(2.0, 0.0, 0);
+	balle->getAnimation()->setSpeed(Vector3(-5.1, 1.8, 0.0));
+}
+
+void MainScene::hardThrow(double delta_t)
+{
+	balle->getAnimation()->setPosition(5.0, 0.0, 0);
+	balle->getAnimation()->setSpeed(Vector3(-5.05, -9.85, 0));
+}
+
+void MainScene::inhumanThrow(double delta_t)
+{
+	balle->getAnimation()->setPosition(5.0, 0.0, 0);
+	balle->getAnimation()->setSpeed(Vector3(-1.55, -35.25, 0));
+}
+
+
+
 
 /*
  * Gestion de la rotation camera.
@@ -572,4 +612,51 @@ void MainScene::update(double delta_t)
 
 	// Gestion de la caméra
 	gestionCamera();
+
+	if (!keyboard.wind)
+	{
+		vent = Vector3(0, 0, 0);
+	}
+	else
+	{
+		vent = Vector3(-1, 0, -1);
+	}
+
+	if (keyboard.oneNumericButtonPressed)
+	{
+		keyboard.oneNumericButtonPressed = false;
+		successThrowBounce(delta_t);
+	}
+	if (keyboard.twoNumericButtonPressed)
+	{
+		keyboard.twoNumericButtonPressed = false;
+		successThrowNoBounce(delta_t);
+	}
+	if (keyboard.threeNumericButtonPressed)
+	{
+		keyboard.threeNumericButtonPressed = false;
+		failThrow(delta_t);
+	}
+	if (keyboard.fourNumericButtonPressed)
+	{
+		keyboard.fourNumericButtonPressed = false;
+		tableThrow(delta_t);
+	}
+	if (keyboard.fiveNumericButtonPressed)
+	{
+		keyboard.fiveNumericButtonPressed = false;
+		hardThrow(delta_t);
+	}
+	if (keyboard.sixNumericButtonPressed)
+	{
+		keyboard.sixNumericButtonPressed = false;
+		inhumanThrow(delta_t);
+
+	}
+	if (keyboard.cameraBalleView)
+	{
+		camera.target = balle->getAnimation()->getPosition();
+	}
+
+
 }
