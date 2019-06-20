@@ -43,7 +43,7 @@ void update(shared_ptr<Scene> scene, double delta_t);
 const void render(shared_ptr<Scene> scene);
 
 // Camera rotation
-void cameraRotation(const Vector3 &cam_pos, double phi, double theta, double rho);
+void cameraRotation(const Vector3 &cam_pos, double phi, double theta, double rho, Vector3& outAbsPos);
 
 // Frees media and shuts down SDL
 void close(SDL_Window** window);
@@ -164,7 +164,9 @@ const void render(shared_ptr<Scene> scene)
 	glLoadIdentity();
 
 	// Set the camera position and parameters
-	cameraRotation(scene->camera.position, scene->camera.phi * M_PI / 180, scene->camera.theta * M_PI / 180, scene->camera.rho);
+	Vector3 absPos;
+	cameraRotation(scene->camera.target, scene->camera.phi * M_PI / 180.0, scene->camera.theta * M_PI / 180.0, scene->camera.rho, absPos);
+	scene->camera.position = absPos;
 
 	// View matrix
 	double vm[16], pm[16];
@@ -201,14 +203,12 @@ void close(SDL_Window** window)
 	SDL_Quit();
 }
 
-void cameraRotation(const Vector3 &cam_pos, double phi, double theta, double rho)
+void cameraRotation(const Vector3 &cam_pos, double phi, double theta, double rho, Vector3& outAbsPos)
 {
 
-
+	outAbsPos = Vector3(rho * sin(phi) * cos(theta) + cam_pos.x, rho * cos(phi), rho * sin(phi) * sin(theta) + cam_pos.z);
 	
-	gluLookAt(rho * sin(phi) * cos(theta) + cam_pos.x,
-		rho * cos(phi),
-		rho * sin(phi) * sin(theta) + cam_pos.z, //Position of camera
+	gluLookAt(outAbsPos.x, outAbsPos.y, outAbsPos.z,
 		cam_pos.x, cam_pos.y, cam_pos.z, //Position where to look at
 		0.0, 1.0, 0.0); // Position of vectors
 		

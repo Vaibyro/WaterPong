@@ -38,8 +38,8 @@ public:
 	Matrix4 projectionMatrix;
 	Vector3 raycastStart;
 	Vector3 raycastEnd;
+	Vector3 target;
 	Vector3 position;
-	Vector3 lookAt;
 	double rho;
 	double phi;
 	double theta;
@@ -60,6 +60,8 @@ public:
 
 	shared_ptr<Component> createComponent(const shared_ptr<Form>& form, const Vector3& pos);
 	shared_ptr<Component> createComponent(const shared_ptr<Form>& form);
+
+	void removeComponent(const shared_ptr<Component>& pointerToComponent);
 
 	size_t componentsCount() { return components.size(); };
 

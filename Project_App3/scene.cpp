@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "scene.h"
 
 Scene::Scene() 
@@ -25,4 +26,14 @@ shared_ptr<Component> Scene::createComponent(const shared_ptr<Form>& form, const
 shared_ptr<Component> Scene::createComponent(const shared_ptr<Form>& form)
 {
 	return createComponent(form, Vector3(0, 0, 0));
+}
+
+void Scene::removeComponent(const shared_ptr<Component>& pointerToComponent)
+{
+	auto iter = std::find_if(components.begin(), components.end(),
+		[pointerToComponent](const shared_ptr<Component> m) { return (m == pointerToComponent); });
+	if (iter != components.end())
+	{
+		components.erase(iter);
+	}
 }
