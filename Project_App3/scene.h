@@ -56,6 +56,7 @@ public:
 	bool fiveNumericButtonPressed;
 	bool sixNumericButtonPressed;
 	bool cameraBalleView;
+	bool wind;
 };
 
 

@@ -367,6 +367,19 @@ int main(int argc, char* args[])
 							scene->keyboard.sixNumericButtonPressed = true;
 							break;
 
+						// supprimer vent
+						case SDLK_v:
+							if (!scene->keyboard.wind)
+							{
+								scene->keyboard.wind = true;
+							}
+							else
+							{
+								scene->keyboard.wind = false;
+							}
+							break;
+
+						// camera mode shuffle
 						case SDLK_c:
 							if (!scene->keyboard.cameraBalleView)
 							{

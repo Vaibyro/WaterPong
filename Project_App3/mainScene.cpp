@@ -473,7 +473,7 @@ void MainScene::tableThrow(double delta_t)
 void MainScene::hardThrow(double delta_t)
 {
 	balle->getAnimation()->setPosition(5.0, 0.0, 0);
-	balle->getAnimation()->setSpeed(Vector3(-5.05, -9.25, 0));
+	balle->getAnimation()->setSpeed(Vector3(-5.05, -9.85, 0));
 }
 
 void MainScene::inhumanThrow(double delta_t)
@@ -613,6 +613,14 @@ void MainScene::update(double delta_t)
 	// Gestion de la caméra
 	gestionCamera();
 
+	if (!keyboard.wind)
+	{
+		vent = Vector3(0, 0, 0);
+	}
+	else
+	{
+		vent = Vector3(-1, 0, -1);
+	}
 
 	if (keyboard.oneNumericButtonPressed)
 	{
