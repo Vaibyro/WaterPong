@@ -55,6 +55,10 @@ public:
 	bool fourNumericButtonPressed;
 	bool fiveNumericButtonPressed;
 	bool sixNumericButtonPressed;
+	bool sevenNumericButtonPressed;
+	bool eightNumericButtonPressed;
+	bool nineNumericButtonPressed;
+	bool zeroNumericButtonPressed;
 	bool cameraBalleView;
 	bool wind;
 };

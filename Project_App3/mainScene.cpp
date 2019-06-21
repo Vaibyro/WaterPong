@@ -556,40 +556,11 @@ void MainScene::physiqueBalle(double delta_t)
 }
 
 
-void MainScene::successThrowBounce(double delta_t)
+// Function that simulate a throw without having to do it with a mouse
+void MainScene::simulationThrow(double delta_t, Vector3 position, Vector3 speed)
 {
-	balle->getAnimation()->setPosition(0, 0.5, 0);
-	balle->getAnimation()->setSpeed(Vector3(-2.1, 2.8, 0));
-}
-
-void MainScene::successThrowNoBounce(double delta_t)
-{
-	balle->getAnimation()->setPosition(0, 1.3, 0);
-	balle->getAnimation()->setSpeed(Vector3(-3.30, 1.9, 0.22));
-}
-
-void MainScene::failThrow(double delta_t)
-{
-	balle->getAnimation()->setPosition(0, 0.5, 0);
-	balle->getAnimation()->setSpeed(Vector3(-2.1, 2.8, -2.5));
-}
-
-void MainScene::tableThrow(double delta_t)
-{
-	balle->getAnimation()->setPosition(2.0, 0.0, 0);
-	balle->getAnimation()->setSpeed(Vector3(-5.1, 1.8, 0.0));
-}
-
-void MainScene::hardThrow(double delta_t)
-{
-	balle->getAnimation()->setPosition(5.0, 0.0, 0);
-	balle->getAnimation()->setSpeed(Vector3(-5.05, -9.85, 0));
-}
-
-void MainScene::inhumanThrow(double delta_t)
-{
-	balle->getAnimation()->setPosition(5.0, 0.0, 0);
-	balle->getAnimation()->setSpeed(Vector3(-1.55, -35.25, 0));
+	balle->getAnimation()->setPosition(position);
+	balle->getAnimation()->setSpeed(speed);
 }
 
 
@@ -640,31 +611,19 @@ void MainScene::gestionCamera()
 		previousMouseMiddleButtonDownState = true;
 
 		// X Axis
-		if (camera.theta > 360 || camera.theta < -360)
-		{
-			camera.theta = 0;
-		}
-		else
-		{
-			camera.theta = mouseMiddlePointXfactor * 180;
-		}
 
+		camera.theta = mouseMiddlePointXfactor * 180;
 
 		// Y Axis
-		if (camera.phi < 180)
+
+		camera.phi = mouseMiddlePointYfactor * 90;
+
+		if (camera.phi > 95)
 		{
-			camera.phi = mouseMiddlePointYfactor * 90;
-		}
-		else
-		{
-			camera.phi = 180;
+			camera.phi = 94;
 		}
 
-		if (camera.phi > 0)
-		{
-			camera.phi = mouseMiddlePointYfactor * 90;
-		}
-		else
+		if (camera.phi < 0)
 		{
 			camera.phi = 1;
 		}
@@ -732,35 +691,74 @@ void MainScene::update(double delta_t)
 		displayWindVector = true;
 	}
 
+	// Throw with one bounce and success
 	if (keyboard.oneNumericButtonPressed)
 	{
 		keyboard.oneNumericButtonPressed = false;
-		successThrowBounce(delta_t);
+		simulationThrow(delta_t, Vector3(0, 0.5, 0), Vector3(-2.1, 2.8, 0));
 	}
+
+	// Throw with success and no bounce
 	if (keyboard.twoNumericButtonPressed)
 	{
 		keyboard.twoNumericButtonPressed = false;
-		successThrowNoBounce(delta_t);
+		simulationThrow(delta_t, Vector3(0, 1.3, 0), Vector3(-3.30, 1.9, 0.22));
 	}
+
+	// Throw with failure
 	if (keyboard.threeNumericButtonPressed)
 	{
 		keyboard.threeNumericButtonPressed = false;
-		failThrow(delta_t);
+		simulationThrow(delta_t, Vector3(0, 0.5, 0), Vector3(-2.1, 2.8, -2.5));
 	}
+
+	// Throw with bounce on the table
 	if (keyboard.fourNumericButtonPressed)
 	{
 		keyboard.fourNumericButtonPressed = false;
-		tableThrow(delta_t);
+		simulationThrow(delta_t, Vector3(2.0, 0.0, 0), Vector3(-5.1, 1.8, 0.0));
 	}
+
+	// Throw with bounce on ground then on table then success
 	if (keyboard.fiveNumericButtonPressed)
 	{
 		keyboard.fiveNumericButtonPressed = false;
-		hardThrow(delta_t);
+		simulationThrow(delta_t, Vector3(5.0, 0.0, 0), Vector3(-4.96, -9.85, 0));
 	}
+
+	// Throw with fool vector speed
 	if (keyboard.sixNumericButtonPressed)
 	{
 		keyboard.sixNumericButtonPressed = false;
-		inhumanThrow(delta_t);
+		simulationThrow(delta_t, Vector3(5.0, 0.0, 0), Vector3(-1.55, -35.25, 0));
+
+	}
+
+	// Bounce on one people (balls destructor)
+	if (keyboard.sevenNumericButtonPressed)
+	{
+		keyboard.sevenNumericButtonPressed = false;
+		simulationThrow(delta_t, Vector3(0.0, 0.5,-0.5), Vector3(-4, 3, 0.0));
+
+	}
+
+	// Bounce on a cup
+	if (keyboard.eightNumericButtonPressed)
+	{
+		keyboard.eightNumericButtonPressed = false;
+		simulationThrow(delta_t, Vector3(0.0, 1.0, 0.0), Vector3(-1.65, 0.25, 0.0));
+
+	}
+	if (keyboard.nineNumericButtonPressed)
+	{
+		keyboard.nineNumericButtonPressed = false;
+		simulationThrow(delta_t, Vector3(0.0, 2.0, -3.0), Vector3(-3.5,2.8,2.98));
+
+	}
+	if (keyboard.zeroNumericButtonPressed)
+	{
+		keyboard.zeroNumericButtonPressed = false;
+		simulationThrow(delta_t, Vector3(), Vector3());
 
 	}
 	if (keyboard.cameraBalleView) // touche c

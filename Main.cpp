@@ -348,33 +348,65 @@ int main(int argc, char* args[])
 							// Modes
 						case SDLK_1:
 							scene->keyboard.oneNumericButtonPressed = true;
-							cout << "Scenario 1 lance." << endl;
+							cout << "Scenario 1 se lance: lancer parfait avec rebond." << endl;
 							break;
 
 						case SDLK_2:
 							scene->keyboard.twoNumericButtonPressed = true;
-							cout << "Scenario 2 lance." << endl;
+							cout << "Scenario 2 lance: lancer parfait sans rebond." << endl;
 							break;
 
 						case SDLK_3:
 							scene->keyboard.threeNumericButtonPressed = true;
-							cout << "Scenario 3 lance." << endl;
+							cout << "Scenario 3 lance: lancer fail." << endl;
 							break;
 
 						case SDLK_4:
 							scene->keyboard.fourNumericButtonPressed = true;
-							cout << "Scenario 4 lance." << endl;
+							cout << "Scenario 4 lance: lancer fail avec rebond sur flanc de table." << endl;
 							break;
 
 						case SDLK_5:
 							scene->keyboard.fiveNumericButtonPressed = true;
-							cout << "Scenario 5 lance." << endl;
+							cout << "Scenario 5 lance: lancer parfait avec rebond par terre puis rebond sur table." << endl;
 							break;
 
 						case SDLK_6:
 							scene->keyboard.sixNumericButtonPressed = true;
-							cout << "Scenario 6 lance." << endl;
+							cout << "Scenario 6 lance: lancer avec force inhumaine." << endl;
 							break;
+
+						case SDLK_7:
+							scene->keyboard.sevenNumericButtonPressed = true;
+							cout << "Scenario 7 lance: lancer pour rendre sterile." << endl;
+							break;
+
+						case SDLK_8:
+							scene->keyboard.eightNumericButtonPressed = true;
+							cout << "Scenario 8 lance: lancer avec rebond sur verre." << endl;
+							break;
+
+						case SDLK_9:
+							scene->keyboard.nineNumericButtonPressed = true;
+							cout << "Scenario 9 lance: lancer parfait avec rebond sur mannequin." << endl;
+							break;
+
+						case SDLK_0:
+							scene->keyboard.zeroNumericButtonPressed = true;
+							cout << "Scenario 0 lance." << endl;
+							break;
+
+
+
+
+
+
+
+
+
+
+
+
 
 						// supprimer vent
 						case SDLK_v:
