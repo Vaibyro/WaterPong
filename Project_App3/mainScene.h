@@ -49,6 +49,8 @@ private:
 	shared_ptr<Component> mancheAAir;
 	shared_ptr<MancheAAir> mancheAAirForm;
 
+	bool displayWindVector;
+
 	// ---------------------------------------------------------------------------------------------------
 
 	double rayonBalle = 0.02;
@@ -56,6 +58,8 @@ private:
 	double niveauTable = 0.0;
 	bool lastCollisionSol;
 	bool lastCollisionTable;
+	bool lastCollisionPerso1;
+	bool lastCollisionPerso2;
 	
 	bool mousePressedLastState;
 
@@ -87,6 +91,8 @@ private:
 	Vector3 mouseArrival;
 
 	Vector3 lastPointCollisionTable;
+	Vector3 lastPointCollisionPerso1;
+	Vector3 lastPointCollisionPerso2;
 	
 	// vent
 	Vector3 vent;

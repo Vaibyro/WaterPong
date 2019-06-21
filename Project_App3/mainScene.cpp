@@ -8,8 +8,6 @@
 #include "physics.h"
 #include <gl\glew.h>
 #include <SDL_opengl.h>
-//#include <gl\glu.h> // Deja inclus dans glew.h
-
 #include <SDL.h>
 /*
  * Une fois au debut de la creation de la scene.
@@ -24,7 +22,7 @@ void MainScene::setup()
 	camera.rho = 4.0;
 
 	// For debugging
-	auto axis = createComponent(shared_ptr<Form>(new Axis()), Vector3(-2, -0.35, -2));
+	//auto axis = createComponent(shared_ptr<Form>(new Axis()), Vector3(-2, -0.35, -2));
 	auto skyBox = createComponent(shared_ptr<Form>(new Sphere(50, SKY)), Vector3(0, 0, 0));
 
 	// ============= Balle
@@ -152,14 +150,18 @@ void MainScene::setup()
 
 	// personnages
 	personnage1 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-3, -0.7, 0.3));
+	collPersonnage1 = personnage1->addBoxCollider(1.85, 0.3, 0.7, Vector3(0, 0, 0));
 	personnage2 = createComponent(shared_ptr<Form>(new Personnage()), Vector3(-3, -0.7, -0.8));
+	collPersonnage2 = personnage2->addBoxCollider(1.85, 0.3, 0.7, Vector3(0, 0, 0));
 
 	// MancheAAir(Color co, angleX, angleY, angleZ)
-	mancheAAir = createComponent(shared_ptr<Form>(new MancheAAir(RED, vent)), Vector3(-1.0, 0.4, -1.2));
+	//mancheAAir = createComponent(shared_ptr<Form>(new Arrow(vent)), Vector3(-1.0, 0.4, -1.2));
+	mancheAAir = createComponent(shared_ptr<Form>(new Arrow(vent)), Vector3(999, -999, 999));
 	
-
 	lastCollisionSol = false;
 	lastCollisionTable = false;
+	lastCollisionPerso1 = false;
+	lastCollisionPerso2 = false;
 
 	//lastCollisionVerre1 = false;
 	previous_time = 0;
@@ -181,7 +183,7 @@ void MainScene::setup()
 
 	masse = 0.027;
 
-
+	displayWindVector = false;
 
 	//mancheAAir->setAngle(vent.x, vent.y, vent.z);
 
@@ -192,9 +194,16 @@ void MainScene::setup()
 void MainScene::genererVent()
 {
 	double r = (double)rand() / (double)RAND_MAX;
-	vent.x = r * (1.0 + 1.0) - 1.0;
-	vent.y = r * (0.3 + 0.3) - 0.3;
-	vent.z = r * (1.0 + 1.0) - 1.0;
+
+	double minxz = -2.0;
+	double maxxz = 2.0;
+
+	double miny = -0.3;
+	double maxy = 0.3;
+
+	vent.x = r * (maxxz - minxz) + minxz;
+	vent.y = r * (miny - miny) + miny;
+	vent.z = r * (maxxz - minxz) + minxz;
 
 	cout << "vent.x = " << vent.x << endl;
 	cout << "vent.y = " << vent.y << endl;
@@ -209,8 +218,9 @@ void MainScene::physiqueBalle(double delta_t)
 
 
 	Vector3 axisCollisionTable;
+	Vector3 axisCollisionPerso1;
+	Vector3 axisCollisionPerso2;
 
-	Vector3 axisCollisionVerre1; // a virer
 	vector<Vector3> axisCollisionVerres;
 
 	// --------------------------------------------------------------------------------------------------------------------
@@ -220,9 +230,10 @@ void MainScene::physiqueBalle(double delta_t)
 	// TODO: colliders verres.
 	bool collisionSol = false;
 	bool collisionTable = false;
+	bool collisionPerso1 = false;
+	bool collisionPerso2 = false;
 
 	// Verres
-	//bool collisionVerre1 = false;
 
 	// Tableau des collision des verres
 	vector<bool> collisionVerres;
@@ -240,14 +251,14 @@ void MainScene::physiqueBalle(double delta_t)
 		collisionSol = collider->collision(collPlane);
 		collisionTable = collider->collision(collTable, axisCollisionTable);
 
+		collisionPerso1 = collider->collision(collPersonnage1, axisCollisionPerso1);
+		collisionPerso2 = collider->collision(collPersonnage2, axisCollisionPerso2);
+
 		// Collision verres
 		for (int i = 0; i < lastCollisionVerres.size(); i++) {
 			collisionVerres[i] = collider->collision(collVerres[i], axisCollisionVerres[i]);
 			collisionVerresFonds[i] = collider->collision(collVerresFonds[i], Vector3(0, 0, 0));
 		}
-
-		//collisionVerre1 = collider->collision(collVerre1, axisCollisionVerre1); // a virer
-		//collisionVerre1_2 = collider->collision(collVerre1_fond, Vector3(0, 0, 0)); //a virer
 	}
 	// --------------------------------------------------------------------------------------------------------------------
 
@@ -256,8 +267,15 @@ void MainScene::physiqueBalle(double delta_t)
 		lastPointCollisionTable = axisCollisionTable;
 	}
 
+	if ((axisCollisionPerso1 != Vector3::zero())) {
+		lastPointCollisionPerso1 = axisCollisionPerso1;
+	}
+
+	if ((axisCollisionPerso2 != Vector3::zero())) {
+		lastPointCollisionPerso2 = axisCollisionPerso2;
+	}
+
 	for (int i = 0; i < lastCollisionVerres.size(); i++) {
-		
 		if (axisCollisionVerres[i] != Vector3::zero())
 		{
 			lastPointCollisionsVerres[i] = axisCollisionVerres[i];
@@ -315,6 +333,78 @@ void MainScene::physiqueBalle(double delta_t)
 
 		// TODO: vérifier s'il faut d'autres sécurités pour les côtés de la table
 	}
+
+	// Collisions perso 1
+	else if (!lastCollisionPerso1 && collisionPerso1) // Si une collision vient d'être detectée avec la table (sur n'importe quel côté)
+	{
+		// On applique le coefficient de rebond
+		speed_x *= coeff;
+		speed_y *= coeff;
+		speed_z *= coeff;
+
+		// Lorsqu'il y a un rebond sur un des côtés de la table, on inverse la composante vitesse adéquate :
+		if (abs(lastPointCollisionPerso1.x) == 1.0) // Rebond sur une face de l'axe X
+		{
+			speed_x = -speed_x;
+		}
+
+		if (abs(lastPointCollisionPerso1.y) == 1.0) // Rebond sur une face de l'axe Y (haut ou bas)
+		{
+			speed_y = -speed_y;
+		}
+
+		if (abs(lastPointCollisionPerso1.z) == 1.0) // Rebond sur une face de l'axe Z
+		{
+			speed_z = -speed_z;
+		}
+
+		lastCollisionPerso1 = true;
+
+		// Sécurité pour pas que la balle ne parte dans la table...
+		if (lastPointCollisionPerso1.y == 1.0)
+		{
+			balle->setY(niveauTable + rayonBalle);
+		}
+
+		// TODO: vérifier s'il faut d'autres sécurités pour les côtés de la table
+	}
+
+	// Collision perso 2
+	else if (!lastCollisionPerso2 && collisionPerso2) // Si une collision vient d'être detectée avec la table (sur n'importe quel côté)
+	{
+		// On applique le coefficient de rebond
+		speed_x *= coeff;
+		speed_y *= coeff;
+		speed_z *= coeff;
+
+		// Lorsqu'il y a un rebond sur un des côtés de la table, on inverse la composante vitesse adéquate :
+		if (abs(lastPointCollisionPerso2.x) == 1.0) // Rebond sur une face de l'axe X
+		{
+			speed_x = -speed_x;
+		}
+
+		if (abs(lastPointCollisionPerso2.y) == 1.0) // Rebond sur une face de l'axe Y (haut ou bas)
+		{
+			speed_y = -speed_y;
+		}
+
+		if (abs(lastPointCollisionPerso2.z) == 1.0) // Rebond sur une face de l'axe Z
+		{
+			speed_z = -speed_z;
+		}
+
+		lastCollisionPerso2 = true;
+
+		// Sécurité pour pas que la balle ne parte dans la table...
+		if (lastPointCollisionPerso2.y == 1.0)
+		{
+			balle->setY(niveauTable + rayonBalle);
+		}
+
+		// TODO: vérifier s'il faut d'autres sécurités pour les côtés de la table
+	}
+
+
 	else
 	{
 		bool noCollision = true;
@@ -356,6 +446,9 @@ void MainScene::physiqueBalle(double delta_t)
 			// On indique qu'il n'y a pas eu de collision sur cette frame.
 			lastCollisionSol = false;
 			lastCollisionTable = false;
+			lastCollisionPerso1 = false;
+			lastCollisionPerso2 = false;
+
 			for (int i = 0; i < lastCollisionVerres.size(); i++) {
 				lastCollisionVerres[i] = false;
 			}
@@ -417,6 +510,8 @@ void MainScene::physiqueBalle(double delta_t)
 
 	}
 
+	
+
 	// Front montant souris : se produit lors du changement d'état du click gauche.
 	if (!mousePressedLastState && mouse.leftButtonPressed)
 	{
@@ -425,11 +520,18 @@ void MainScene::physiqueBalle(double delta_t)
 		mousePressedLastState = true;
 
 		genererVent();
-		//vent = Vector3(2, 0, 1);
-		mancheAAir->setForm(shared_ptr<Form>(new MancheAAir(RED, vent)));
-
+	
 		//mancheAAirForm->setAngle(vent.x, vent.y, vent.z);
 
+	}
+
+	if (displayWindVector)
+	{
+		mancheAAir->getAnimation()->setPosition(Vector3(-1.0, 0.4, -1.2));
+		mancheAAir->setForm(shared_ptr<Form>(new Arrow(vent)));
+	}
+	else {
+		mancheAAir->getAnimation()->setPosition(Vector3(999, -999, 999));
 	}
 	
 	// --------------------------------------------------------------------------------------------------------------------
@@ -626,11 +728,11 @@ void MainScene::update(double delta_t)
 
 	if (!keyboard.wind)
 	{
+		displayWindVector = false;
 		vent = Vector3(0, 0, 0);
 	}
-	else
-	{
-		vent = Vector3(-1, 0, -1);
+	else {
+		displayWindVector = true;
 	}
 
 	if (keyboard.oneNumericButtonPressed)
