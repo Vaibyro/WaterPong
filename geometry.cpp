@@ -161,7 +161,7 @@ void Geometry::plane(const Vector3& p1, const Vector3& p2, const Vector3& p3)
 	double b = (px2.x * px1.z) - (px1.x * px2.z);
 	double c = (px1.x * px2.y) - (px1.y * px2.x);
 	double d = (-a * p1.x - b * p1.y - c * p1.z);
-	cout << "equation of plane is " << a << " x + " << b
-		<< " y + " << c << " z + " << d << " = 0.";
+	//cout << "equation of plane is " << a << " x + " << b
+	//	<< " y + " << c << " z + " << d << " = 0.";
 }
 

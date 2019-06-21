@@ -738,9 +738,6 @@ void Parallelepipede::render()
 
 
 
-
-
-
 ///////////////////////////////
 ////	MANCHE A AIR	///////
 ///////////////////////////////
@@ -749,13 +746,7 @@ MancheAAir::MancheAAir(Color co, Vector3 ve)
 	vent = ve;
 	col = co;
 }
-/*
-void MancheAAir::setAngle(double aX, double aY, double aZ)
-{
-	angleX = aX * 360;
-	angleY = aY * 360;
-	angleZ = aZ * 360;
-}*/
+
 
 
 void MancheAAir::update(double delta_t)
@@ -780,25 +771,6 @@ void MancheAAir::render()
 	glTranslated(anim->getPosition().x, anim->getPosition().y, anim->getPosition().z);
 
 
-	/*
-	Vector3 ventNormalise = vent.normalize();
-	cout << 360.0 * ventNormalise << endl;
-	*/
-
-
-	// Get the angle of rotation of the cap
-	/*
-	double L = vent.norm();
-	if ((vent.x != 0.0) || (vent.y != 0.0)) {
-		glRotated(atan2(vent.y, vent.x) / RADPERDEG, 0.0, 0.0, 1.0);
-		glRotated(atan2(sqrt(vent.x * vent.x + vent.y * vent.y), vent.z) / RADPERDEG, 0.0, 1.0, 0.0);
-	}
-	else if (vent.z < 0) {
-		glRotated(180, 1.0, 0.0, 0.0);
-	}
-	*/
-
-
 	// calcul des angles
 	// Degree = radian * 180/π
 	double angleX = 0;
@@ -813,46 +785,7 @@ void MancheAAir::render()
 		angleX = -20;
 
 
-
-	/*
-	else
-		angleX = (vent.x * 180 / 3.14);
-
-	if ((vent.y * 180 / 3.14) + 180 < 0)
-		angleY = -((vent.y * 180 / 3.14) + 180);
-	else
-		angleY = (vent.y * 180 / 3.14) + 180;
-
-	if ((vent.z * 180 / 3.14) < 0)
-		angleZ = -((vent.z * 180 / 3.14));
-	else
-		angleZ = (vent.z * 180 / 3.14); */
-
-		/*
-		cout << "angle X = " << angleX << endl;
-		cout << "angle Y = " << angleY << endl;
-		cout << "angle Z = " << angleZ << endl;
-		*/
-
-
-
-		// x
 	glRotated(angleX, 1, 0, 0);
-	/*
-	// y
-	glRotated(angleY + 180, 0, 1, 0);
-	// z
-	glRotated(angleZ, 0, 0, 1);
-	*/
-
-	/*
-	// x
-	glRotated((vent.x * 180/3.14), 1, 0, 0);
-	// y
-	glRotated((vent.y * 180 / 3.14) + 180, 0, 1, 0);
-	// z
-	glRotated((vent.z * 180 / 3.14), 0, 0, 1);
-	*/
 
 	glRotated(180, 0, 0, 1);
 	glColor3f(col.r, col.g, col.b);

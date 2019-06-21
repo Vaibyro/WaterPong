@@ -342,31 +342,38 @@ int main(int argc, char* args[])
 							scene->camera.phi = 90.0;
 							scene->camera.theta = 45.0;
 							scene->camera.rho = 4.0;
+							cout << "Camera recentree" << endl;
 							break;
 
 							// Modes
 						case SDLK_1:
 							scene->keyboard.oneNumericButtonPressed = true;
+							cout << "Scenario 1 lance." << endl;
 							break;
 
 						case SDLK_2:
 							scene->keyboard.twoNumericButtonPressed = true;
+							cout << "Scenario 2 lance." << endl;
 							break;
 
 						case SDLK_3:
 							scene->keyboard.threeNumericButtonPressed = true;
+							cout << "Scenario 3 lance." << endl;
 							break;
 
 						case SDLK_4:
 							scene->keyboard.fourNumericButtonPressed = true;
+							cout << "Scenario 4 lance." << endl;
 							break;
 
 						case SDLK_5:
 							scene->keyboard.fiveNumericButtonPressed = true;
+							cout << "Scenario 5 lance." << endl;
 							break;
 
 						case SDLK_6:
 							scene->keyboard.sixNumericButtonPressed = true;
+							cout << "Scenario 6 lance." << endl;
 							break;
 
 						// supprimer vent
@@ -374,10 +381,12 @@ int main(int argc, char* args[])
 							if (!scene->keyboard.wind)
 							{
 								scene->keyboard.wind = true;
+								cout << "La tempete recommence !" << endl;
 							}
 							else
 							{
 								scene->keyboard.wind = false;
+								cout << "Le vent se calme." << endl;
 							}
 							break;
 
@@ -386,10 +395,12 @@ int main(int argc, char* args[])
 							if (!scene->keyboard.cameraBalleView)
 							{
 								scene->keyboard.cameraBalleView = true;
+								cout << "On commence a suivre la balle." << endl;
 							}
 							else
 							{
 								scene->keyboard.cameraBalleView = false;
+								cout << "Retour à la vue stantard." << endl;
 							}
 							break;
 
@@ -398,6 +409,7 @@ int main(int argc, char* args[])
 						// Quit the program when 'q' or Escape keys are pressed
 						case SDLK_q:
 						case SDLK_ESCAPE:
+							cout << "On quitte l'application." << endl;
 							quit = true;
 							break;
 

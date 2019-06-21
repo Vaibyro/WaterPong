@@ -189,6 +189,7 @@ void MainScene::setup()
 
 	// L'initialisation de la scène est terminé.
 	cout << "Main scene setup finished" << endl;
+	cout << "Le jeu va commencer !" << endl;
 }
 
 void MainScene::genererVent()
@@ -204,10 +205,6 @@ void MainScene::genererVent()
 	vent.x = r * (maxxz - minxz) + minxz;
 	vent.y = r * (miny - miny) + miny;
 	vent.z = r * (maxxz - minxz) + minxz;
-
-	cout << "vent.x = " << vent.x << endl;
-	cout << "vent.y = " << vent.y << endl;
-	cout << "vent.Z = " << vent.z << endl;
 
 }
 
@@ -462,7 +459,7 @@ void MainScene::physiqueBalle(double delta_t)
 			balle->getAnimation()->setSpeed(0, 0, 0);
 			Vector3 posVerre = Vector3(verres[i]->getX(), verres[i]->getY() + 0.05, verres[i]->getZ());
 			balle->getAnimation()->setPosition(posVerre);
-			cout << verres[i]->getAnimation()->getPosition() << endl;
+			//cout << verres[i]->getAnimation()->getPosition() << endl;
 
 		}
 	}
